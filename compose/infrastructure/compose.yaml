@@ -8,7 +8,9 @@ services:
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
-      TZ: ${TZ}
+      TZ: ${TZ}      
+    ports:
+      - "3000:3000"
     volumes:
       - ${HOMELAB_ROOT}/appdata/homepage:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -18,6 +20,8 @@ services:
   uptime-kuma:
     image: louislam/uptime-kuma:latest
     restart: unless-stopped
+    ports:
+      - "3001:3001"
     volumes:
       - ${HOMELAB_ROOT}/appdata/uptime-kuma:/app/data
     networks:
