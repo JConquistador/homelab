@@ -133,3 +133,157 @@ Accepted
 ### Rationale
 
 Version-controlled documentation and configuration improve reproducibility, disaster recovery, and long-term maintainability.
+
+---
+
+## ADR-009
+
+### Decision
+
+Use a dedicated media Compose project containing all media-related services.
+
+### Status
+
+Accepted
+
+### Rationale
+
+The media services form a tightly coupled application ecosystem:
+
+- Indexers provide content sources.
+- Media managers automate acquisition and organization.
+- Download clients retrieve content.
+- Jellyfin consumes the organized library.
+
+Keeping these services together simplifies deployment, troubleshooting, upgrades, and disaster recovery.
+
+Separate Compose projects would provide additional modularity but would increase network management and operational complexity without significant benefit for this environment.
+
+---
+
+## ADR-010
+
+### Decision
+
+Use dedicated Docker networks instead of relying on the default bridge network.
+
+### Status
+
+Accepted
+
+### Rationale
+
+Explicit Docker networks provide better isolation, clearer service relationships, and improved security.
+
+Services should communicate through named Docker networks rather than relying on exposed host ports wherever possible.
+
+The planned network separation includes:
+
+- Media services
+- Frontend services
+- Proxy services
+- Monitoring services
+- VPN-routed services
+
+---
+
+## ADR-011
+
+### Decision
+
+Use a shared `/data` mount for media-related containers.
+
+### Status
+
+Accepted
+
+### Rationale
+
+All media management applications require a consistent filesystem view to support hardlinks, simplify configuration, and avoid remote path mappings.
+
+The container path remains `/data` regardless of the underlying host operating system.
+
+Development environment:
+
+```text
+E:\homelab
+```
+
+Production environment:
+
+```text
+/srv/homelab
+```
+
+---
+
+## ADR-012
+
+### Decision
+
+Use a dedicated media service account for container file ownership.
+
+### Status
+
+Accepted
+
+### Rationale
+
+A shared UID/GID simplifies permissions between media containers while maintaining predictable ownership.
+
+This approach improves compatibility between:
+
+- qBittorrent
+- SABnzbd
+- Sonarr
+- Radarr
+- Lidarr
+- Readarr
+- Bazarr
+
+Separate users per application would provide stronger isolation but would significantly complicate permissions and hardlink compatibility.
+
+---
+
+## ADR-013
+
+### Decision
+
+Store container configuration separately from media storage.
+
+### Status
+
+Accepted
+
+### Rationale
+
+Application configuration and media data have different backup, recovery, and lifecycle requirements.
+
+Separating configuration into application-specific directories allows:
+
+- easier backups,
+- easier migration,
+- simpler container replacement,
+- reduced risk of accidental media changes.
+
+---
+
+## ADR-014
+
+### Decision
+
+Use environment files for configuration templates while keeping secrets out of Git.
+
+### Status
+
+Accepted
+
+### Rationale
+
+Infrastructure configuration should be version controlled, but sensitive information should not be committed.
+
+The project will maintain:
+
+- `.env.example` files containing required variables.
+- Local `.env` files excluded from Git.
+- Separate secret handling where required.

@@ -2,22 +2,47 @@
 
 ## Current Phase
 
-**Phase 6 – Media Stack Architecture (Part 2)**
+**Phase 6 – Media Stack Deployment (Part 4): Compose Implementation**
 
-The next task is to design the container bind mount strategy before deploying any media applications.
+The next task is to create the media stack Compose structure based on the documented architecture decisions.
+
+This includes:
+
+- Creating the `compose/media/` project structure.
+- Creating `.env.example` and `.env` handling.
+- Defining Docker networks.
+- Defining shared `/data` and `/config` mounts.
+- Creating the initial media stack Compose file.
+- Validating container startup incrementally.
+
+Deployment will begin with foundational networking services before application containers:
+
+1. Gluetun
+2. qBittorrent
+3. SABnzbd
+4. Prowlarr
+5. Sonarr/Radarr/Lidarr/Readarr
+6. Bazarr
+7. Jellyfin
+8. Jellyseerr
+9. Tautulli
+
+Each service will be validated before moving to the next dependency layer.
 
 ---
 
 # Completed Phases
 
-| Phase                                       | Status     |
-| ------------------------------------------- | ---------- |
-| Phase 1 – Docker Installation               | ✅ Complete |
-| Phase 2 – Docker Compose Architecture       | ✅ Complete |
-| Phase 3 – Repository & Directory Structure  | ✅ Complete |
-| Phase 4 – Permissions Strategy              | ✅ Complete |
-| Phase 5 – Core Infrastructure Containers    | ✅ Complete |
-| Phase 6 – Media Stack Architecture (Part 1) | ✅ Complete |
+| Phase                                                   | Status     |
+| ------------------------------------------------------- | ---------- |
+| Phase 1 – Docker Installation                           | ✅ Complete |
+| Phase 2 – Docker Compose Architecture                   | ✅ Complete |
+| Phase 3 – Repository & Directory Structure              | ✅ Complete |
+| Phase 4 – Permissions Strategy                          | ✅ Complete |
+| Phase 5 – Core Infrastructure Containers                | ✅ Complete |
+| Phase 6 – Storage/media directory architecture (Part 1) | ✅ Complete |
+| Phase 6 – Container mount strategy (Part 2)             | ✅ Complete |
+| Phase 6 – Media stack architecture design (Part 3)      | ✅ Complete |
 
 ---
 
@@ -50,14 +75,15 @@ Current state:
 
 # Next Milestone
 
-Complete the media stack architecture by defining:
+Implement the media stack according to the documented architecture.
 
-* Standard container bind mounts
-* Shared filesystem layout
-* Hardlink-compatible path strategy
-* Docker network design for media services
+The first deployment milestone is:
 
-No additional media containers have been deployed yet.
+- Create the media Compose project.
+- Establish Docker networks.
+- Configure shared mounts.
+- Deploy VPN networking foundation.
+- Validate download routing before adding automation services.
 
 ---
 
