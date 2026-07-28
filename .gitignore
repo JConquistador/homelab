@@ -1,0 +1,28 @@
+# Environment secrets
+.env
+.env.*
+
+# Keep examples
+!.env.example
+
+# Docker runtime data
+appdata/
+media/
+downloads/
+backups/
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.log
+
+# Local testing
+docker-compose.override.yml
