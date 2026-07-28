@@ -297,7 +297,9 @@ Media libraries:
 ├── tv
 ├── music
 ├── music-videos
-└── books
+├── books
+├── audiobooks
+└── photos
 ```
 
 The host paths may change between development and production environments, but container paths remain consistent.
@@ -326,10 +328,18 @@ Example:
 
 ```text
 appdata/
+├── gluetun
+├── qbittorrent
+├── sabnzbd
+├── prowlarr
 ├── sonarr
 ├── radarr
+├── lidarr
+├── readarr
+├── bazarr
 ├── jellyfin
-└── qbittorrent
+├── jellyseerr
+└── tautulli
 ```
 
 ---
@@ -393,6 +403,22 @@ Gluetun provides:
 - Kill switch behavior.
 
 Other applications should not share this network unless their traffic should also be VPN-routed.
+
+---
+
+## VPN Configuration Storage
+
+Gluetun stores VPN-related runtime data separately from media configuration.
+
+Example:
+
+```text
+appdata/
+└── gluetun/
+    └── servers/
+```
+
+This directory is managed by Gluetun and should be preserved during migrations.
 
 ---
 
