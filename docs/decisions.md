@@ -391,3 +391,63 @@ Rejected for now because:
 - Potentially reduced torrent seeding efficiency.
 
 Future migration to another VPN provider should only require environment and Gluetun configuration changes.
+
+## ADR-016
+
+### Status
+
+Accepted
+
+### Date
+
+2026-07-28
+
+### Context
+
+The first production media services have now been deployed using the architecture defined in the design documentation.
+
+This milestone validates:
+
+- Dedicated media Compose project.
+- Dedicated Docker networks.
+- Gluetun VPN gateway.
+- qBittorrent using `network_mode: service:gluetun`.
+- Shared `/data` storage strategy.
+- Environment variable configuration through `.env`.
+- Git exclusion of deployment-specific secrets.
+
+### Decision
+
+The project will use Gluetun as the shared VPN gateway for torrent download services.
+
+Applications requiring VPN protection will join the Gluetun network namespace using:
+
+```yaml
+network_mode: service:gluetun
+```
+
+This architecture prevents protected services from communicating directly with the Docker bridge network or the host network.
+
+### Rationale
+
+Using a shared network namespace provides:
+
+- Automatic kill-switch behavior through Gluetun.
+- No additional firewall rules within application containers.
+- Simplified networking.
+- Consistent outbound routing through WireGuard.
+
+Verification confirmed that outbound traffic from qBittorrent exits through the Mullvad VPN endpoint rather than the host's public IP address.
+
+### Consequences
+
+#### Positive
+
+- Torrent traffic cannot bypass the VPN tunnel.
+- The networking model is simple and reproducible.
+- Additional VPN-protected services can be added with minimal configuration.
+
+#### Negative
+
+- Services sharing the Gluetun namespace cannot expose ports independently.
+- All exposed ports must be published by the Gluetun container.

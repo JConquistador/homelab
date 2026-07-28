@@ -2,20 +2,21 @@
 
 ## Current Phase
 
-**Phase 6 – Media Stack Deployment (Part 5)**
+**Phase 7 – Media Stack Deployment (Part 2 – Download Services)**
 
-The next task is to deploy the VPN gateway layer using Gluetun and Mullvad WireGuard.
+The VPN gateway foundation has been successfully deployed and validated.
 
-The media stack architecture has been documented, including:
+Completed implementation:
 
-- Compose organization
-- Service dependencies
-- Docker networking strategy
-- Storage mounts
-- Hardlink requirements
-- VPN isolation design
+- Media Compose project created.
+- Dedicated Docker networks established.
+- Environment variable management implemented.
+- Gluetun deployed with Mullvad WireGuard.
+- qBittorrent deployed using `network_mode: service:gluetun`.
+- VPN routing validated using Mullvad connectivity testing and container network verification.
+- Git ignore strategy finalized for configuration management.
 
-The next implementation step is deploying Gluetun before adding download services.
+The next implementation step is deploying SABnzbd followed by the media automation services.
 
 ---
 
@@ -28,11 +29,8 @@ The next implementation step is deploying Gluetun before adding download service
 | Phase 3 – Repository & Directory Structure | ✅ Complete |
 | Phase 4 – Permissions Strategy | ✅ Complete |
 | Phase 5 – Core Infrastructure Containers | ✅ Complete |
-| Phase 6 – Media directory architecture (Part 1) | ✅ Complete |
-| Phase 6 – Container mount strategy (Part 2) | ✅ Complete |
-| Phase 6 – Media stack architecture decisions (Part 3) | ✅ Complete |
-| Phase 6 – Media stack documentation (Part 4) | ✅ Complete |
-| Phase 6 – VPN architecture decision (Part 5) | ✅ Complete |
+| Phase 6 – Media Architecture & Design | ✅ Complete |
+| Phase 7 – Media Stack Deployment (Part 1 – VPN Foundation) | ✅ Complete |
 
 ---
 
@@ -57,23 +55,52 @@ Future Production:
 
 Current state:
 
-* All changes committed
-* All changes pushed to GitHub
-* Documentation synchronized with implementation
+- Working tree clean.
+- All changes committed.
+- All changes pushed to GitHub.
+- Documentation synchronized with implementation.
+- Windows and WSL Git configurations aligned.
+- Development environment verified under both PowerShell and WSL.
 
 ---
 
 # Next Milestone
 
-Implement the media stack according to the documented architecture.
+Continue deployment of the media stack.
 
-The first deployment milestone is:
+Next implementation stages:
 
-- Create the media Compose project.
-- Establish Docker networks.
-- Configure shared mounts.
-- Deploy VPN networking foundation.
-- Validate download routing before adding automation services.
+- Complete the download layer (SABnzbd).
+- Deploy the automation layer (Prowlarr, Sonarr, Radarr, Lidarr, Readarr, Bazarr).
+- Validate automated imports and hardlink behavior.
+- Deploy the media consumption layer (Jellyfin, Jellyseerr, Tautulli).
+
+---
+
+# Current Deployment
+
+Infrastructure:
+
+- Homepage
+- Uptime Kuma
+
+Media:
+
+- Gluetun
+- qBittorrent
+
+Pending:
+
+- SABnzbd
+- Prowlarr
+- Sonarr
+- Radarr
+- Lidarr
+- Readarr
+- Bazarr
+- Jellyfin
+- Jellyseerr
+- Tautulli
 
 ---
 
