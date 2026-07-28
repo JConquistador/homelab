@@ -11,10 +11,12 @@
 
 # Docker runtime data
 appdata/
-media/
 downloads/
 backups/
 logs/
+
+# Media library data
+/media/
 
 # OS files
 .DS_Store
