@@ -5,6 +5,10 @@
 # Keep examples
 !.env.example
 
+# Docker Compose local overrides
+*override.yaml
+*override.yml
+
 # Docker runtime data
 appdata/
 media/
@@ -23,6 +27,3 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.log
-
-# Local testing
-docker-compose.override.yml
