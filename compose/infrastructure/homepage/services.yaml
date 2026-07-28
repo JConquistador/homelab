@@ -1,0 +1,11 @@
+- Infrastructure:
+    - Uptime Kuma:
+        href: http://localhost:3001
+        description: Service monitoring
+        icon: uptime-kuma.png
+
+- Management:
+    - Homepage:
+        href: http://localhost:3000
+        description: Homelab dashboard
+        icon: homepage.png
