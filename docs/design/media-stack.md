@@ -255,40 +255,52 @@ Host port exposure is reserved for:
 
 All media containers use consistent container paths.
 
-## Shared Media Mount
+## Shared Media Mounts
+
+Media containers use consistent container paths while keeping downloads and media libraries separated at the host level.
 
 Host:
 
 ```text
-homelab/
+E:\homelab
+├── downloads
+├── media
+└── appdata
 ```
 
-Container:
+Container paths:
 
 ```text
-/data
+/downloads
+/media
+/config
 ```
 
 Example:
 
 ```text
-/data
-├── downloads
-│   ├── qbittorrent
-│   │   ├── incomplete
-│   │   └── complete
-│   │
-│   └── sabnzbd
-│       ├── incomplete
-│       └── complete
+/downloads
+├── qbittorrent
+│   ├── incomplete
+│   └── complete
 │
-└── media
-    ├── movies
-    ├── tv
-    ├── music
-    ├── music-videos
-    └── books
+└── sabnzbd
+    ├── incomplete
+    └── complete
 ```
+
+Media libraries:
+
+```text
+/media
+├── movies
+├── tv
+├── music
+├── music-videos
+└── books
+```
+
+The host paths may change between development and production environments, but container paths remain consistent.
 
 ---
 
@@ -299,7 +311,9 @@ Each application receives its own configuration directory.
 Host:
 
 ```text
-appdata/<application>
+E:\homelab
+└── appdata
+    └── <application>
 ```
 
 Container:
@@ -314,7 +328,6 @@ Example:
 appdata/
 ├── sonarr
 ├── radarr
-├── bazarr
 ├── jellyfin
 └── qbittorrent
 ```
@@ -323,19 +336,12 @@ appdata/
 
 # Hardlink Strategy
 
-Media management applications should use hardlinks whenever importing completed downloads from supported download clients.
-
-This primarily applies to:
-
-- Sonarr
-- Radarr
-- Lidarr
-- Readarr
+Sonarr and Radarr should use hardlinks when importing torrent downloads.
 
 Requirements:
 
 - Downloads and media must exist on the same filesystem.
-- Containers must see identical paths.
+- Containers must see identical download paths.
 - Permissions must allow shared access.
 
 Example:
@@ -353,10 +359,14 @@ Sonarr:
 Correct:
 
 ```text
-Both:
+qBittorrent:
+/downloads/qbittorrent/complete
 
-/data/downloads
+Sonarr:
+/downloads/qbittorrent/complete
 ```
+
+The download client and media managers must see the same container path structure. This allows hardlinks to be created without remote path mappings.
 
 ---
 
@@ -483,8 +493,16 @@ The primary migration changes are:
 
 - Host operating system.
 - Storage backend.
-- Bind mount root path.
+- Host storage mount paths.
 - Hardware acceleration configuration.
+
+The following container paths should remain unchanged:
+
+```text
+/config
+/downloads
+/media
+```
 
 ---
 
