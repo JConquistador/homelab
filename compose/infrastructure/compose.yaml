@@ -1,0 +1,28 @@
+services:
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    restart: unless-stopped
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+    volumes:
+      - ${HOMELAB_ROOT}/appdata/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - frontend
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    restart: unless-stopped
+    volumes:
+      - ${HOMELAB_ROOT}/appdata/uptime-kuma:/app/data
+    networks:
+      - frontend
+
+
+networks:
+
+  frontend:
+    external: true
