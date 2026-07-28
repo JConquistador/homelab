@@ -287,3 +287,107 @@ The project will maintain:
 - `.env.example` files containing required variables.
 - Local `.env` files excluded from Git.
 - Separate secret handling where required.
+
+---
+
+# ADR-015
+
+## Status
+
+Accepted
+
+## Date
+
+2026-07-28
+
+## Context
+
+The media stack requires a VPN gateway for privacy-sensitive download services.
+
+The VPN solution must:
+
+- Integrate with Docker Compose.
+- Support Gluetun.
+- Provide WireGuard connectivity.
+- Prevent download services from bypassing the VPN tunnel.
+- Minimize operational complexity.
+
+Potential providers considered:
+
+- Mullvad VPN
+- Proton VPN
+- AirVPN
+
+## Decision
+
+The homelab will use Mullvad VPN with WireGuard through Gluetun.
+
+The qBittorrent networking architecture will be:
+
+    qBittorrent
+          |
+          |
+    network_mode: service:gluetun
+          |
+          |
+       Gluetun
+          |
+          |
+    Mullvad WireGuard
+
+This ensures torrent traffic cannot bypass the VPN tunnel.
+
+## Rationale
+
+Mullvad was selected because:
+
+- Reliability and simplicity are prioritized over maximum torrent optimization.
+- There is currently no private tracker usage.
+- Port forwarding is not currently a requirement.
+- WireGuard performance is excellent.
+- Gluetun integration is mature.
+- The configuration is simple to maintain.
+
+## Alternatives Considered
+
+### Proton VPN
+
+Advantages:
+
+- Supports port forwarding.
+- Strong privacy reputation.
+- Good WireGuard support.
+
+Rejected for now because:
+
+- Port forwarding is not currently required.
+- Additional configuration complexity provides limited benefit for current requirements.
+
+### AirVPN
+
+Advantages:
+
+- Strong torrent-focused feature set.
+- Port forwarding support.
+- Advanced configuration options.
+
+Rejected for now because:
+
+- Greater configuration complexity.
+- Advanced features are not currently required.
+
+## Consequences
+
+### Positive
+
+- Simple VPN architecture.
+- Strong traffic isolation.
+- Minimal ongoing maintenance.
+- Easy future provider replacement.
+
+### Negative
+
+- No inbound torrent port forwarding.
+- Potentially reduced torrent seeding efficiency.
+
+Future migration to another VPN provider should only require environment and Gluetun configuration changes.

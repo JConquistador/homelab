@@ -2,47 +2,37 @@
 
 ## Current Phase
 
-**Phase 6 – Media Stack Deployment (Part 4): Compose Implementation**
+**Phase 6 – Media Stack Deployment (Part 5)**
 
-The next task is to create the media stack Compose structure based on the documented architecture decisions.
+The next task is to deploy the VPN gateway layer using Gluetun and Mullvad WireGuard.
 
-This includes:
+The media stack architecture has been documented, including:
 
-- Creating the `compose/media/` project structure.
-- Creating `.env.example` and `.env` handling.
-- Defining Docker networks.
-- Defining shared `/data` and `/config` mounts.
-- Creating the initial media stack Compose file.
-- Validating container startup incrementally.
+- Compose organization
+- Service dependencies
+- Docker networking strategy
+- Storage mounts
+- Hardlink requirements
+- VPN isolation design
 
-Deployment will begin with foundational networking services before application containers:
-
-1. Gluetun
-2. qBittorrent
-3. SABnzbd
-4. Prowlarr
-5. Sonarr/Radarr/Lidarr/Readarr
-6. Bazarr
-7. Jellyfin
-8. Jellyseerr
-9. Tautulli
-
-Each service will be validated before moving to the next dependency layer.
+The next implementation step is deploying Gluetun before adding download services.
 
 ---
 
 # Completed Phases
 
-| Phase                                                   | Status     |
-| ------------------------------------------------------- | ---------- |
-| Phase 1 – Docker Installation                           | ✅ Complete |
-| Phase 2 – Docker Compose Architecture                   | ✅ Complete |
-| Phase 3 – Repository & Directory Structure              | ✅ Complete |
-| Phase 4 – Permissions Strategy                          | ✅ Complete |
-| Phase 5 – Core Infrastructure Containers                | ✅ Complete |
-| Phase 6 – Storage/media directory architecture (Part 1) | ✅ Complete |
-| Phase 6 – Container mount strategy (Part 2)             | ✅ Complete |
-| Phase 6 – Media stack architecture design (Part 3)      | ✅ Complete |
+| Phase | Status |
+| --- | --- |
+| Phase 1 – Docker Installation | ✅ Complete |
+| Phase 2 – Docker Compose Architecture | ✅ Complete |
+| Phase 3 – Repository & Directory Structure | ✅ Complete |
+| Phase 4 – Permissions Strategy | ✅ Complete |
+| Phase 5 – Core Infrastructure Containers | ✅ Complete |
+| Phase 6 – Media directory architecture (Part 1) | ✅ Complete |
+| Phase 6 – Container mount strategy (Part 2) | ✅ Complete |
+| Phase 6 – Media stack architecture decisions (Part 3) | ✅ Complete |
+| Phase 6 – Media stack documentation (Part 4) | ✅ Complete |
+| Phase 6 – VPN architecture decision (Part 5) | ✅ Complete |
 
 ---
 
