@@ -2,37 +2,37 @@
 
 ## Purpose
 
-This document describes the storage architecture for the homelab media server and the reasoning behind each design decision.
+This document describes the storage architecture for the homelab media server and the reasoning behind the major storage design decisions.
 
-The primary goals of this storage layout are:
+The storage design prioritizes:
 
 1. Reliability
 2. Security
 3. Ease of maintenance
 4. Expandability
 5. Performance
-6. Efficient use of disk space
-7. Simple migration from the temporary Windows environment to the future Proxmox server
+6. Efficient disk usage
+7. Simple migration from the development environment to the future production server
 
-The directory structure is intentionally designed so that the Windows development environment closely mirrors the future Linux server. This minimizes the changes required during migration.
+The temporary Windows development environment intentionally mirrors the future Linux deployment so that migration requires minimal changes.
 
 ---
 
-# Current Development Environment
+# Environment Paths
 
-Root storage location:
+## Development Environment
 
 ```text
 E:\homelab
 ```
 
-Future production location:
+## Future Production Environment
 
 ```text
 /srv/homelab
 ```
 
-Only the root path should change during migration. The directory layout should remain the same.
+Only the host storage path should change during migration. The internal directory structure and container paths should remain consistent.
 
 ---
 
@@ -66,7 +66,7 @@ homelab/
 
 ## appdata
 
-Persistent application configuration.
+Contains persistent application configuration and state.
 
 Examples:
 
@@ -77,15 +77,15 @@ Examples:
 * Homepage configuration
 * Uptime Kuma database
 
-This directory contains application state and should be included in backups.
+This directory is critical and should be included in backups.
 
 ---
 
 ## media
 
-The permanent media library consumed by Jellyfin.
+Contains the permanent media library consumed by Jellyfin.
 
-Subdirectories are organized by media type rather than genre.
+Media is organized by type rather than genre.
 
 Examples:
 
@@ -95,59 +95,71 @@ Examples:
 * Books
 * Music videos
 
-Anime is stored within the existing `tv` and `movies` libraries because it is managed by Sonarr and Radarr like any other television series or movie.
+Anime remains within the standard `tv` and `movies` libraries because it is managed by Sonarr and Radarr like other media types. Separate anime libraries would add complexity without providing significant operational benefit.
 
 ---
 
 ## downloads
 
-Temporary and active download storage.
+Contains active and completed downloads.
 
 Downloads are separated by application:
 
 * qBittorrent
 * SABnzbd
 
-Each application has:
+Each application maintains:
 
-* `incomplete/`
 * `complete/`
+* `incomplete/`
 
-Torrent downloads may remain in the completed directory for extended periods while seeding.
+Torrent downloads may remain in `complete/` while seeding.
 
-Usenet downloads are generally temporary and are removed after a successful import.
+Usenet downloads are generally removed after successful import.
 
 ---
 
 ## backups
 
-Application backups and exported configuration.
+Contains exported configuration, database backups, and backup metadata.
 
-This directory will later contain:
+Examples:
 
-* database exports
-* configuration archives
-* backup manifests
+* Application database exports
+* Configuration archives
+* Backup manifests
 
 ---
 
 ## logs
 
-Optional centralized log storage if required by future services.
+Reserved for optional centralized logging.
+
+Not all applications will use this directory.
 
 ---
 
 ## scripts
 
-Administrative scripts used to automate maintenance, backups, updates, and other operational tasks.
+Contains administrative automation.
+
+Examples:
+
+* Backup scripts
+* Maintenance scripts
+* Update helpers
 
 ---
 
 ## staging
 
-Temporary working directory used during maintenance operations and large file transfers.
+Temporary working space for:
 
-This directory is not intended for permanent storage.
+* Large file transfers
+* Maintenance operations
+* Migration activities
+
+This directory does not contain permanent data.
 
 ---
 
@@ -155,66 +167,177 @@ This directory is not intended for permanent storage.
 
 The media server is designed to use hardlinks whenever possible.
 
-Hardlinks allow Sonarr and Radarr to import completed torrent downloads without duplicating file contents.
+Hardlinks allow Sonarr and Radarr to import completed torrent downloads without creating duplicate copies of the same file.
 
-Benefits include:
+Benefits:
 
 * Reduced disk usage
-* Instant imports
+* Faster imports
 * Continued torrent seeding
-* Less disk wear
+* Reduced disk activity
 
-For hardlinks to function correctly:
+Hardlinks require:
 
-* Downloads and media must reside on the same filesystem.
-* Containers must use consistent bind mounts.
-* Permissions must allow both the downloader and media managers to access the same files.
+* Downloads and media to exist on the same filesystem.
+* Consistent paths between downloader and media management containers.
+* Correct filesystem permissions.
 
-These requirements influence both the directory layout and the Docker Compose configuration.
+The storage layout and container mount strategy are designed specifically to support these requirements.
+
+---
+
+# Container Mount Strategy
+
+## Design Goal
+
+All media-related containers should see the same filesystem layout regardless of the host operating system.
+
+The host path is abstracted behind a consistent container mount.
+
+Host:
+
+```text
+E:\homelab
+```
+
+or:
+
+```text
+/srv/homelab
+```
+
+Container:
+
+```text
+/data
+```
+
+This ensures the same application configuration works across:
+
+* Windows development environment
+* WSL 2
+* Ubuntu Server
+* Future Proxmox deployment
+
+---
+
+## Standard Mount Layout
+
+Media-related containers receive:
+
+```text
+Host
+
+homelab/
+
+↓
+
+Container
+
+/data
+```
+
+Application configuration is separated:
+
+```text
+Host
+
+appdata/<application>
+
+↓
+
+Container
+
+/config
+```
+
+This keeps application state isolated while allowing controlled access to shared storage.
+
+---
+
+## Shared Container View
+
+Media containers see:
+
+```text
+/data
+├── downloads
+├── media
+├── backups
+├── logs
+├── scripts
+└── staging
+```
+
+Because all media applications use the same paths, remote path mappings are avoided.
+
+---
+
+## Storage Access Principles
+
+Storage access should follow the principle of least privilege.
+
+Applications should only receive access to the storage required for their function.
+
+Media storage is intentionally separated from application configuration so that:
+
+- Application state can be backed up independently.
+- Services without media requirements do not receive unnecessary filesystem access.
+- The impact of application compromise or misconfiguration is reduced.
+
+The specific container mount assignments are documented in `container-platform.md`.
 
 ---
 
 # Future ZFS Layout
 
-The production server will use ZFS.
+The production server will use ZFS storage.
 
 Initial configuration:
 
-* One mirrored vdev consisting of two NAS-grade HDDs.
+* Two NAS-grade HDDs configured as a mirrored vdev.
 
 Future expansion:
 
-* Additional mirrored vdevs will be added to increase capacity while maintaining redundancy.
+* Additional mirrored vdevs added as capacity requirements increase.
 
-The directory structure documented here should remain unchanged after migration to ZFS.
+The logical directory structure remains unchanged when moving to ZFS.
 
 ---
 
 # Backup Considerations
 
-The following directories contain irreplaceable or difficult-to-recreate data and should be backed up:
+The following contain important data and should be backed up:
 
-* appdata/
-* scripts/
-* documentation
+* `appdata/`
+* `scripts/`
+* Documentation
 * Git repository
 
-The following directories can be recreated or re-downloaded if necessary:
+The following can generally be recreated:
 
-* downloads/
-* staging/
+* `downloads/`
+* `staging/`
 
-The media library backup strategy will depend on the total storage capacity and available backup infrastructure.
+The media library backup strategy will depend on available backup capacity and recovery requirements.
 
 ---
 
 # Design Principles
 
-The storage architecture follows several guiding principles:
+The storage architecture follows these principles:
 
 * Keep configuration separate from application containers.
 * Keep downloads and media on the same filesystem.
-* Organize by media type rather than genre.
-* Maintain consistent directory names across environments.
-* Minimize migration effort.
-* Favor simplicity and long-term maintainability over unnecessary complexity.
+* Use consistent paths across environments.
+* Organize media by type rather than genre.
+* Minimize migration complexity.
+* Favor reliability and maintainability over unnecessary complexity.
+
+---
+
+# Related Documentation
+
+* `architecture.md`
+* `container-platform.md`
+* `project-status.md`
