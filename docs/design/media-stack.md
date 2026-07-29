@@ -180,20 +180,32 @@ Examples:
 
 Purpose:
 
-Traffic isolation for applications requiring VPN routing.
+The VPN network provides outbound VPN connectivity for download clients. qBittorrent and SABnzbd share Gluetun's network namespace using network_mode: service:gluetun. 
+Media management services (Prowlarr, Sonarr, Radarr, etc.) remain on the media network.
 
 Example:
 
 ```text
-                Mullvad WireGuard
-                       |
-                    Gluetun
-                       |
-          +------------+------------+
-          |                         |
-    qBittorrent                SABnzbd
- network_mode:             network_mode:
- service:gluetun           service:gluetun
+                    Media Network
+
+        +-----------+-----------+
+        |           |           |
+    Prowlarr     Sonarr      Radarr
+        |
+        |
+        +----------------+
+                         |
+                  Download Clients
+                         |
+              +----------+----------+
+              |                     |
+          SABnzbd             qBittorrent
+              |                     |
+              +----------+----------+
+                         |
+                      Gluetun
+                         |
+                    Mullvad VPN
 ```
 
 qBittorrent and SABnzbd must not have direct internet access outside the VPN tunnel.
@@ -246,7 +258,6 @@ Production:
 ```
 
 The frontend layer consumes finalized media files only. Download directories and application configuration directories remain isolated from frontend services.
-```
 
 ---
 

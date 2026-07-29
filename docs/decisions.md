@@ -451,3 +451,77 @@ Verification confirmed that outbound traffic from qBittorrent exits through the 
 
 - Services sharing the Gluetun namespace cannot expose ports independently.
 - All exposed ports must be published by the Gluetun container.
+
+## ADR-017
+
+# VPN Routing Scope for Media Services
+
+## Status
+
+Accepted
+
+## Date
+
+2026-07-29
+
+## Context
+
+The media stack requires VPN protection for services that communicate directly with external download sources.
+
+Potential candidates include:
+
+- qBittorrent
+- SABnzbd
+- Sonarr
+- Radarr
+- Prowlarr
+- Jellyfin
+
+Routing every media service through the VPN would increase complexity and potentially complicate service communication.
+
+## Decision
+
+Only download clients and services that directly communicate with external download infrastructure will use the VPN gateway.
+
+VPN-routed services:
+
+- qBittorrent
+- SABnzbd
+
+Non-VPN services:
+
+- Prowlarr
+- Sonarr
+- Radarr
+- Lidarr
+- Readarr
+- Bazarr
+- Jellyfin
+- Jellyseerr
+
+## Rationale
+
+The VPN provides privacy benefits primarily for download traffic.
+
+Automation services do not require VPN routing and benefit from normal network connectivity for:
+
+- service communication,
+- API integrations,
+- local management,
+- troubleshooting.
+
+Keeping automation services outside the VPN simplifies networking while maintaining privacy where it matters.
+
+## Consequences
+
+Positive:
+
+- Simpler Docker networking.
+- Easier service discovery.
+- Fewer routing issues.
+- Reduced VPN dependency.
+
+Negative:
+
+- Automation services communicate over the normal network path.
+- Future changes may require revisiting service boundaries.
