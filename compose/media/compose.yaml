@@ -77,6 +77,25 @@ services:
       - sabnzbd-config:/config
       - ${HOMELAB_ROOT}/downloads:/downloads
 
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+
+    volumes:
+      - ${HOMELAB_ROOT}/appdata/prowlarr:/config
+
+    ports:
+      - "9696:9696"
+
+    networks:
+      - media
+
 
 volumes:
 
