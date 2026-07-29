@@ -185,24 +185,38 @@ Traffic isolation for applications requiring VPN routing.
 Example:
 
 ```text
-qBittorrent
-
-      |
-      v
-
-Gluetun
-
-      |
-      v
-
-Mullvad VPN
+                Mullvad WireGuard
+                       |
+                    Gluetun
+                       |
+          +------------+------------+
+          |                         |
+    qBittorrent                SABnzbd
+ network_mode:             network_mode:
+ service:gluetun           service:gluetun
 ```
 
-qBittorrent must not have direct internet access outside the VPN tunnel.
+qBittorrent and SABnzbd must not have direct internet access outside the VPN tunnel.
 
 ---
 
-## frontend Network
+## VPN Gateway Port Exposure
+
+Services sharing the Gluetun network namespace cannot publish ports independently.
+
+Example:
+
+qBittorrent:
+  internal port 8080
+
+SABnzbd:
+  internal port 8081
+
+Both ports must be published by the Gluetun container.
+
+---
+
+## Frontend Network
 
 Purpose:
 
@@ -215,7 +229,24 @@ Examples:
 
 Jellyfin participates in the frontend network for user access.
 
-Jellyfin accesses media files through the shared `/data` mount rather than through communication with automation services.
+Jellyfin accesses organized media files through a read-only media mount. It does not communicate directly with automation services such as Sonarr or Radarr.
+
+Media access is provided through the host media library:
+
+Development:
+
+```text
+E:\homelab\media
+```
+
+Production:
+
+```text
+/srv/homelab/media
+```
+
+The frontend layer consumes finalized media files only. Download directories and application configuration directories remain isolated from frontend services.
+```
 
 ---
 

@@ -411,7 +411,7 @@ This milestone validates:
 - Dedicated media Compose project.
 - Dedicated Docker networks.
 - Gluetun VPN gateway.
-- qBittorrent using `network_mode: service:gluetun`.
+- qBittorrent and SABnzbd using `network_mode: service:gluetun`.
 - Shared `/data` storage strategy.
 - Environment variable configuration through `.env`.
 - Git exclusion of deployment-specific secrets.

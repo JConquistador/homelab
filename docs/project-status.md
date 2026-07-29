@@ -15,6 +15,9 @@ Completed implementation:
 - qBittorrent deployed using `network_mode: service:gluetun`.
 - VPN routing validated using Mullvad connectivity testing and container network verification.
 - Git ignore strategy finalized for configuration management.
+- SABnzbd deployed using network_mode: service:gluetun.
+- SABnzbd download directories validated.
+- VPN routing validated for both download services.
 
 The next implementation step is deploying SABnzbd followed by the media automation services.
 
@@ -70,8 +73,8 @@ Continue deployment of the media stack.
 
 Next implementation stages:
 
-- Complete the download layer (SABnzbd).
 - Deploy the automation layer (Prowlarr, Sonarr, Radarr, Lidarr, Readarr, Bazarr).
+- Validate indexer and download client integration.
 - Validate automated imports and hardlink behavior.
 - Deploy the media consumption layer (Jellyfin, Jellyseerr, Tautulli).
 
@@ -88,10 +91,10 @@ Media:
 
 - Gluetun
 - qBittorrent
+- SABnzbd
 
 Pending:
 
-- SABnzbd
 - Prowlarr
 - Sonarr
 - Radarr

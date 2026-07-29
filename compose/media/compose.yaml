@@ -1,10 +1,12 @@
 name: homelab-media
 
+
 services:
 
   gluetun:
     image: qmcgaw/gluetun:latest
     container_name: gluetun
+    restart: unless-stopped
 
     cap_add:
       - NET_ADMIN
@@ -14,6 +16,7 @@ services:
     
     ports:
       - 8080:8080
+      - 8081:8081
 
     environment:
       TZ: ${TZ}
@@ -29,11 +32,11 @@ services:
     networks:
       - vpn
 
-    restart: unless-stopped
-  
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    restart: unless-stopped
 
     network_mode: "service:gluetun"
 
@@ -50,7 +53,34 @@ services:
       - ${HOMELAB_ROOT}/appdata/qbittorrent:/config
       - ${HOMELAB_ROOT}/downloads/qbittorrent:/downloads
 
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
     restart: unless-stopped
+
+    network_mode: "service:gluetun"
+    
+    depends_on:
+      - gluetun
+      
+    #ports:
+    #  - "8081:8080"
+    #networks:
+    #  - media
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+
+    volumes:
+      - sabnzbd-config:/config
+      - ${HOMELAB_ROOT}/downloads:/downloads
+
+
+volumes:
+
+  sabnzbd-config:
 
 
 networks:
