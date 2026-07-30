@@ -466,7 +466,7 @@ Accepted
 
 ## Context
 
-The media stack requires VPN protection for services that communicate directly with external download sources.
+The media stack includes services that communicate with external content providers and download networks. Not all services require VPN routing, and routing every media service through the VPN would increase networking complexity and reduce operational simplicity.
 
 Potential candidates include:
 
@@ -477,11 +477,9 @@ Potential candidates include:
 - Prowlarr
 - Jellyfin
 
-Routing every media service through the VPN would increase complexity and potentially complicate service communication.
-
 ## Decision
 
-Only download clients and services that directly communicate with external download infrastructure will use the VPN gateway.
+Only download clients that retrieve content from external download networks will be routed through the VPN gateway.
 
 VPN-routed services:
 
@@ -498,6 +496,14 @@ Non-VPN services:
 - Bazarr
 - Jellyfin
 - Jellyseerr
+
+## Implementation
+
+Download clients share the Gluetun network namespace using:
+
+- `network_mode: service:gluetun`
+
+Automation services use the standard media Docker network.
 
 ## Rationale
 
