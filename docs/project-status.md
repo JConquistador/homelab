@@ -15,6 +15,8 @@ Completed implementation:
 - Prowlarr deployed
 - Usenet indexer configured
 - Torrent trackers configured
+- Sonarr deployed and partially configured
+- Validate automated acquisition workflow (Sonarr → SABnzbd → Prowlarr)
 
 The next implementation step is deploying Sonarr followed by the binding all the services into one fully automated workflow.
 
@@ -71,10 +73,7 @@ Continue deployment of the media stack.
 
 Next implementation stages:
 
-- Deploy Sonarr
-- Connect Prowlarr → Sonarr
-- Connect Sonarr → SABnzbd/qBittorrent
-- Validate automated acquisition workflow
+- Finish configuring Sonarr settings (Profiles, Quality Defaults, etc)
 - Deploy and connect the rest of the automation layer (Radarr, Lidarr, Readarr, Bazarr).
 - Validate indexer and download client integration.
 - Validate automated imports and hardlink behavior.
@@ -94,11 +93,11 @@ Media:
 - Gluetun
 - qBittorrent
 - SABnzbd
+- Prowlarr
+- Sonarr
 
 Pending:
 
-- Prowlarr
-- Sonarr
 - Radarr
 - Lidarr
 - Readarr

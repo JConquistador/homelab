@@ -3,6 +3,7 @@ name: homelab-media
 
 services:
 
+  # VPN
   gluetun:
     image: qmcgaw/gluetun:latest
     container_name: gluetun
@@ -31,8 +32,9 @@ services:
 
     networks:
       - vpn
+      - media
 
-
+  # Downloaders
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -62,7 +64,8 @@ services:
     
     depends_on:
       - gluetun
-      
+    
+    #Temporary to allow configuration, remove    
     #ports:
     #  - "8081:8080"
     #networks:
@@ -77,6 +80,7 @@ services:
       - sabnzbd-config:/config
       - ${HOMELAB_ROOT}/downloads:/downloads
 
+  # Automation
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -92,6 +96,27 @@ services:
 
     ports:
       - "9696:9696"
+
+    networks:
+      - media
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+
+    volumes:
+      - ${HOMELAB_ROOT}/appdata/sonarr:/config
+      - ${HOMELAB_ROOT}/downloads:/downloads
+      - ${HOMELAB_ROOT}/media/tv:/tv
+
+    ports:
+      - "8989:8989"
 
     networks:
       - media
