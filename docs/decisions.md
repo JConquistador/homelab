@@ -187,36 +187,6 @@ The planned network separation includes:
 
 ---
 
-## ADR-011
-
-### Decision
-
-Use a shared `/data` mount for media-related containers.
-
-### Status
-
-Accepted
-
-### Rationale
-
-All media management applications require a consistent filesystem view to support hardlinks, simplify configuration, and avoid remote path mappings.
-
-The container path remains `/data` regardless of the underlying host operating system.
-
-Development environment:
-
-```text
-E:\homelab
-```
-
-Production environment:
-
-```text
-/srv/homelab
-```
-
----
-
 ## ADR-012
 
 ### Decision
@@ -412,7 +382,6 @@ This milestone validates:
 - Dedicated Docker networks.
 - Gluetun VPN gateway.
 - qBittorrent and SABnzbd using `network_mode: service:gluetun`.
-- Shared `/data` storage strategy.
 - Environment variable configuration through `.env`.
 - Git exclusion of deployment-specific secrets.
 

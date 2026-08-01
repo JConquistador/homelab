@@ -53,7 +53,7 @@ services:
 
     volumes:
       - ${HOMELAB_ROOT}/appdata/qbittorrent:/config
-      - ${HOMELAB_ROOT}/downloads/qbittorrent:/downloads
+      - ${HOMELAB_ROOT}/downloads:/downloads
 
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
