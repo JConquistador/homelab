@@ -16,9 +16,9 @@ Completed implementation:
 - Usenet indexer configured
 - Torrent trackers configured
 - Sonarr deployed configured
-- Validate automated acquisition workflow (Sonarr → SABnzbd/qbittorrent → Prowlarr)
+- Validate automated acquisition workflow (Sonarr+Radarr → SABnzbd/qbittorrent → Prowlarr)
 
-The next implementation step is deploying Radarr followed by Jellyfin/Jellyseer to bind all the services into one fully automated workflow.
+The next implementation step is deploying Jellyfin/Jellyseer to bind all the services into one fully automated workflow.
 
 ---
 
@@ -94,15 +94,15 @@ Media:
 - SABnzbd
 - Prowlarr
 - Sonarr
+- Radarr
 
 Pending:
 
-- Radarr
+- Jellyfin
+- Jellyseerr
 - Lidarr
 - Readarr
 - Bazarr
-- Jellyfin
-- Jellyseerr
 - Tautulli
 
 ---

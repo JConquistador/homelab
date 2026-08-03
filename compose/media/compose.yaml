@@ -121,6 +121,27 @@ services:
     networks:
       - media
 
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+
+    volumes:
+      - ${HOMELAB_ROOT}/appdata/radarr:/config
+      - ${HOMELAB_ROOT}/downloads:/downloads
+      - ${HOMELAB_ROOT}/media/movies:/movies
+
+    ports:
+      - "7878:7878"
+
+    networks:
+      - media
+
 
 volumes:
 
