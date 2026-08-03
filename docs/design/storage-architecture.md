@@ -79,7 +79,7 @@ Examples:
 
 This directory is critical and should be included in backups.
 
-During development, SABnzbd configuration is stored in a Docker named volume due to Windows filesystem permission limitations. This will be migrated to appdata/sabnzbd after moving to Ubuntu Server.
+Development Note: SABnzbd configuration is stored in a Docker named volume due to Windows filesystem permission limitations. This will be migrated to appdata/sabnzbd after moving to Ubuntu Server.
 
 ---
 
@@ -185,6 +185,8 @@ Hardlinks require:
 * Correct filesystem permissions.
 
 The storage layout and container mount strategy are designed specifically to support these requirements.
+
+Development Note: Hardlink behavior cannot be fully validated in the Windows/WSL2 development environment because Docker bind mounts traverse the Windows NTFS filesystem layer. Production validation will occur after migration to Ubuntu Server with ZFS storage.
 
 ---
 

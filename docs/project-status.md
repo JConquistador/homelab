@@ -15,8 +15,8 @@ Completed implementation:
 - Prowlarr deployed
 - Usenet indexer configured
 - Torrent trackers configured
-- Sonarr deployed configured
-- Validate automated acquisition workflow (Sonarr+Radarr → SABnzbd/qbittorrent → Prowlarr)
+- Sonarr/Radarr/Lidarr deployed and configured
+- Validate automated acquisition workflow (\*arr → Prowlarr → SABnzbd/qbittorrent → Completed Downloads → \*arr import → \homelab\media\<subfolder>)
 
 The next implementation step is deploying Jellyfin/Jellyseer to bind all the services into one fully automated workflow.
 
