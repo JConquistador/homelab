@@ -66,7 +66,7 @@ homelab/
 
 ## appdata
 
-Contains persistent application configuration and state.
+Contains persistent application configuration and state. 
 
 Examples:
 
@@ -78,6 +78,8 @@ Examples:
 * Uptime Kuma database
 
 This directory is critical and should be included in backups.
+
+During development, SABnzbd configuration is stored in a Docker named volume due to Windows filesystem permission limitations. This will be migrated to appdata/sabnzbd after moving to Ubuntu Server.
 
 ---
 
@@ -167,7 +169,7 @@ This directory does not contain permanent data.
 
 The media server is designed to use hardlinks whenever possible.
 
-Hardlinks allow Sonarr and Radarr to import completed torrent downloads without creating duplicate copies of the same file.
+Hardlinks allow media management applications (Sonarr, Radarr, Lidarr, and Readarr) to import completed downloads without creating duplicate copies of the media files.
 
 Benefits:
 
@@ -190,7 +192,7 @@ The storage layout and container mount strategy are designed specifically to sup
 
 ## Design Goal
 
-All media-related containers should see the same filesystem layout regardless of the host operating system.
+Media-related containers use consistent container paths for the storage they require regardless of the host operating system.
 
 The host path is abstracted behind a consistent container mount.
 
@@ -206,11 +208,27 @@ or:
 /srv/homelab
 ```
 
-Container:
+Container paths may include:
 
 ```text
-/data
+/config
+/downloads
+/movies
+/tv
+/music
+/books
 ```
+
+Additional administrative paths such as:
+
+```
+/backups
+/logs
+/scripts
+/staging
+```
+
+are only mounted where required.
 
 This ensures the same application configuration works across:
 
@@ -228,13 +246,21 @@ Media-related containers receive:
 ```text
 Host
 
-homelab/
+homelab/media/movies
+homelab/media/tv
+homelab/media/music
+homelab/media/music-videos
+homelab/media/books
 
 ↓
 
 Container
 
-/data
+/movies
+/tv
+/music
+/music-videos
+/books
 ```
 
 Application configuration is separated:
@@ -242,7 +268,7 @@ Application configuration is separated:
 ```text
 Host
 
-appdata/<application>
+homelab/appdata/<application>
 
 ↓
 
@@ -257,19 +283,11 @@ This keeps application state isolated while allowing controlled access to shared
 
 ## Shared Container View
 
-Media containers see:
+Media-related containers receive only the storage required for their role. Download clients receive the downloads directory, while media managers additionally receive the appropriate media library.
 
-```text
-/data
-├── downloads
-├── media
-├── backups
-├── logs
-├── scripts
-└── staging
-```
+This follows the principle of least privilege.
 
-Because all media applications use the same paths, remote path mappings are avoided.
+Because download clients and media management applications use matching container paths for shared download locations, remote path mappings are avoided.
 
 ---
 
@@ -303,6 +321,8 @@ Future expansion:
 
 The logical directory structure remains unchanged when moving to ZFS.
 
+Hardlink support requires downloads and media to remain within the same ZFS filesystem/dataset. Future ZFS dataset design must preserve this requirement.
+
 ---
 
 # Backup Considerations
@@ -310,6 +330,7 @@ The logical directory structure remains unchanged when moving to ZFS.
 The following contain important data and should be backed up:
 
 * `appdata/`
+* `backups/` (backup metadata and exported recovery data)
 * `scripts/`
 * Documentation
 * Git repository

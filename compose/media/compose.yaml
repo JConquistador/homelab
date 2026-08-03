@@ -75,7 +75,7 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-
+      
     volumes:
       - sabnzbd-config:/config
       - ${HOMELAB_ROOT}/downloads:/downloads

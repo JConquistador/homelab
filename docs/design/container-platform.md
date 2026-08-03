@@ -12,7 +12,7 @@ These standards are intended to provide consistency, simplify troubleshooting, i
 
 The container platform should:
 
-* Maintain consistent filesystem paths.
+* Maintain consistent required paths.
 * Minimize container privileges.
 * Separate configuration from application data.
 * Support Infrastructure as Code.
@@ -45,17 +45,30 @@ This allows services to be updated, restarted, or migrated independently.
 
 # Filesystem Layout
 
-Media-related containers receive a shared bind mount.
+Media-related containers receive consistent bind mounts for the storage required by their role.
+
+Development:
 
 ```text
-Host
-↓
+E:\homelab
+```
 
-Homelab Root
+Production:
 
-↓
+```text
+/srv/homelab
+```
 
-/data
+Container paths remain consistent:
+
+```text
+/config
+/downloads
+/movies
+/tv
+/music
+/music-videos
+/books
 ```
 
 Application configuration is mounted individually.
@@ -167,31 +180,35 @@ The container platform follows several guiding principles.
 
 # Storage Mount Strategy
 
-## Shared Data Mount
+## Media Storage Mounts
 
-Media-related containers use a shared `/data` mount.
+Media-related containers receive only the storage required for their function.
 
-This provides consistent filesystem paths across all applications and enables hardlink-based imports.
-
-The host path changes between environments.
-
-Development:
+Download clients receive:
 
 ```text
-E:\homelab
+/downloads
 ```
 
-Production:
+Media managers receive:
 
 ```text
-/srv/homelab
+/downloads
 ```
 
-Container path:
+and the appropriate media library:
 
 ```text
-/data
+/movies
+/tv
+/music
+/music-videos
+/books
 ```
+
+Jellyfin receives read-only access to finalized media libraries.
+
+This provides hardlink compatibility while maintaining least privilege.
 
 ---
 
@@ -199,24 +216,49 @@ Container path:
 
 Containers receive only the filesystem access required for their function.
 
-### Containers Requiring `/data`
+### Containers Requiring Media Storage
 
-These containers interact directly with media files:
+Containers receive storage based on function.
 
-- Jellyfin
+Download clients:
+
+- qBittorrent
+- SABnzbd
+
+require:
+
+```text
+- /downloads
+```
+
+Media management:
+
 - Sonarr
 - Radarr
 - Lidarr
 - Readarr
 - Bazarr
-- qBittorrent
-- SABnzbd
 
-These services require access to download locations and/or the media library.
+require:
+
+```text
+- /downloads
+- relevant media library
+```
+
+Media consumption:
+
+- Jellyfin
+
+requires:
+
+```text
+- read-only media libraries
+```
 
 ---
 
-### Containers Without `/data`
+### Containers Without Media Storage
 
 These containers do not require direct filesystem access:
 
