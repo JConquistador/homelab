@@ -169,7 +169,7 @@ This directory does not contain permanent data.
 
 The media server is designed to use hardlinks whenever possible.
 
-Hardlinks allow media management applications (Sonarr, Radarr, Lidarr, and Readarr) to import completed downloads without creating duplicate copies of the media files.
+Hardlinks allow media management applications (Sonarr, Radarr, and Lidarr) to import completed downloads without creating duplicate copies of the media files.
 
 Benefits:
 

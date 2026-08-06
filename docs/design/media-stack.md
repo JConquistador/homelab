@@ -85,7 +85,6 @@ These services automate media discovery and organization.
 | Sonarr | Television series management |
 | Radarr | Movie management |
 | Lidarr | Music management |
-| Readarr | Book management |
 | Bazarr | Subtitle management |
 | Prowlarr | Indexer management |
 
@@ -128,7 +127,7 @@ Users
  |                |
 Jellyfin      Jellyseerr
                   |
-        Sonarr / Radarr / Lidarr / Readarr
+        Sonarr / Radarr / Lidarr
                   |
               Prowlarr
                   |
@@ -169,7 +168,6 @@ Examples:
 - Sonarr
 - Radarr
 - Lidarr
-- Readarr
 - Prowlarr
 - qBittorrent
 - SABnzbd
@@ -377,7 +375,6 @@ appdata/
 ├── sonarr
 ├── radarr
 ├── lidarr
-├── readarr
 ├── bazarr
 ├── jellyfin
 ├── jellyseerr
@@ -517,7 +514,6 @@ Automation layer:
 - Sonarr
 - Radarr
 - Lidarr
-- Readarr
 - Bazarr
 
 ## Stage 4

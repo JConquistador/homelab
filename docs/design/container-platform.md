@@ -236,7 +236,6 @@ Media management:
 - Sonarr
 - Radarr
 - Lidarr
-- Readarr
 - Bazarr
 
 require:

@@ -18,7 +18,7 @@ Completed implementation:
 - Sonarr/Radarr/Lidarr deployed and configured
 - Validate automated acquisition workflow (\*arr → Prowlarr → SABnzbd/qbittorrent → Completed Downloads → \*arr import → \homelab\media\<subfolder>)
 
-The next implementation step is deploying Jellyfin/Jellyseer to bind all the services into one fully automated workflow.
+The next implementation step is deploying Bazzarr then Jellyfin/Jellyseer to bind all the services into one fully automated workflow.
 
 ---
 
@@ -73,7 +73,7 @@ Continue deployment of the media stack.
 
 Next implementation stages:
 
-- Deploy and connect the rest of the automation layer (Radarr, Lidarr, Readarr, Bazarr).
+- Deploy and connect the rest of the automation layer (Bazarr).
 - Validate indexer and download client integration.
 - Validate automated imports and hardlink behavior.
 - Deploy the media consumption layer (Jellyfin, Jellyseerr, Tautulli).
@@ -95,13 +95,12 @@ Media:
 - Prowlarr
 - Sonarr
 - Radarr
+- Lidarr
 
 Pending:
 
 - Jellyfin
 - Jellyseerr
-- Lidarr
-- Readarr
 - Bazarr
 - Tautulli
 

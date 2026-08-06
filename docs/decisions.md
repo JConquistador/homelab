@@ -500,3 +500,19 @@ Negative:
 
 - Automation services communicate over the normal network path.
 - Future changes may require revisiting service boundaries.
+
+---
+
+## ADR-018
+
+### Decision
+
+Do not include Readarr in the media stack as the project has been discontinued.
+
+### Status
+
+Accepted
+
+### Rationale
+
+Readarr has been retired upstream and is no longer under active development. The homelab will not adopt retired software as a core component. Book and audiobook automation is deferred until a mature, actively maintained replacement demonstrates long-term stability and community adoption.

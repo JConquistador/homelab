@@ -65,7 +65,7 @@ Future production platform:
         │
  Homepage • Uptime Kuma
         │
- Jellyseerr → Sonarr/Radarr/Lidarr/Readarr
+ Jellyseerr → Sonarr/Radarr/Lidarr
         │
      Prowlarr
         │
@@ -110,7 +110,6 @@ Future production platform:
 * Sonarr
 * Radarr
 * Lidarr
-* Readarr
 * Bazarr
 * Prowlarr
 * SABnzbd
