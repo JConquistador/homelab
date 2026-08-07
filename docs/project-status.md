@@ -15,10 +15,10 @@ Completed implementation:
 - Prowlarr deployed
 - Usenet indexer configured
 - Torrent trackers configured
-- Sonarr/Radarr/Lidarr deployed and configured
+- Sonarr/Radarr/Lidarr/Bazarr deployed and configured
 - Validate automated acquisition workflow (\*arr → Prowlarr → SABnzbd/qbittorrent → Completed Downloads → \*arr import → \homelab\media\<subfolder>)
 
-The next implementation step is deploying Bazzarr then Jellyfin/Jellyseer to bind all the services into one fully automated workflow.
+The next implementation step is deploying Jellyfin/Jellyseer to bind all the services into one fully automated workflow.
 
 ---
 
@@ -73,10 +73,9 @@ Continue deployment of the media stack.
 
 Next implementation stages:
 
-- Deploy and connect the rest of the automation layer (Bazarr).
-- Validate indexer and download client integration.
-- Validate automated imports and hardlink behavior.
 - Deploy the media consumption layer (Jellyfin, Jellyseerr, Tautulli).
+- Integrate Cloudflare DNS/Peverse Proxy, Caddy, and Tailscale to expose the correct public and private services.
+- Resolve cloudflare issues adding 1337x and anidex trackers to prowlarr
 
 ---
 
@@ -96,12 +95,12 @@ Media:
 - Sonarr
 - Radarr
 - Lidarr
+- Bazarr
 
 Pending:
 
 - Jellyfin
 - Jellyseerr
-- Bazarr
 - Tautulli
 
 ---

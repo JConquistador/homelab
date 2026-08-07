@@ -163,6 +163,30 @@ services:
     networks:
       - media
 
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+  
+    depends_on:
+      - sonarr
+      - radarr
+  
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+  
+    volumes:
+      - ${HOMELAB_ROOT}/appdata/bazarr:/config
+      - ${HOMELAB_ROOT}/media/movies:/movies
+      - ${HOMELAB_ROOT}/media/tv:/tv
+  
+    ports:
+      - "6767:6767"
+  
+    networks:
+      - media
 
 volumes:
 
