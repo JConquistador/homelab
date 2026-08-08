@@ -53,7 +53,7 @@ services:
 
     volumes:
       - ${HOMELAB_ROOT}/appdata/qbittorrent:/config
-      - ${HOMELAB_ROOT}/downloads:/downloads
+      - ${HOMELAB_ROOT}/data:/data
 
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
@@ -78,7 +78,7 @@ services:
       
     volumes:
       - sabnzbd-config:/config
-      - ${HOMELAB_ROOT}/downloads:/downloads
+      - ${HOMELAB_ROOT}/data:/data
 
   # Automation
   prowlarr:
@@ -112,8 +112,7 @@ services:
 
     volumes:
       - ${HOMELAB_ROOT}/appdata/sonarr:/config
-      - ${HOMELAB_ROOT}/downloads:/downloads
-      - ${HOMELAB_ROOT}/media/tv:/tv
+      - ${HOMELAB_ROOT}/data:/data
 
     ports:
       - "8989:8989"
@@ -133,8 +132,7 @@ services:
 
     volumes:
       - ${HOMELAB_ROOT}/appdata/radarr:/config
-      - ${HOMELAB_ROOT}/downloads:/downloads
-      - ${HOMELAB_ROOT}/media/movies:/movies
+      - ${HOMELAB_ROOT}/data:/data
 
     ports:
       - "7878:7878"
@@ -154,8 +152,7 @@ services:
 
     volumes:
       - ${HOMELAB_ROOT}/appdata/lidarr:/config
-      - ${HOMELAB_ROOT}/downloads:/downloads
-      - ${HOMELAB_ROOT}/media/music:/music
+      - ${HOMELAB_ROOT}/data:/data
 
     ports:
       - "8686:8686"
@@ -179,12 +176,34 @@ services:
   
     volumes:
       - ${HOMELAB_ROOT}/appdata/bazarr:/config
-      - ${HOMELAB_ROOT}/media/movies:/movies
-      - ${HOMELAB_ROOT}/media/tv:/tv
+      - ${HOMELAB_ROOT}/data:/data
   
     ports:
       - "6767:6767"
   
+    networks:
+      - media
+      
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+
+    volumes:
+      - ${HOMELAB_ROOT}/appdata/jellyfin:/config
+      - ${HOMELAB_ROOT}/data/media/movies:/movies:ro
+      - ${HOMELAB_ROOT}/data/media/tv:/tv:ro
+      - ${HOMELAB_ROOT}/data/media/music:/music:ro
+      - ${HOMELAB_ROOT}/data/media/books:/books:ro
+
+    ports:
+      - "8096:8096"
+
     networks:
       - media
 

@@ -59,25 +59,32 @@ Production:
 /srv/homelab
 ```
 
-Container paths remain consistent:
+The host-side path changes between environments, but the container-side paths remain consistent.
+
+Media-related containers use:
 
 ```text
-/config
-/downloads
-/movies
-/tv
-/music
-/music-videos
-/books
+/data
 ```
 
-Application configuration is mounted individually.
+Application configuration is mounted individually:
 
 ```text
 /config
 ```
 
-This results in identical container paths regardless of the host operating system.
+This results in consistent container paths regardless of the host operating system.
+
+The `/data` mount contains:
+
+```text
+/data/
+├── downloads/
+└── media/
+```
+
+Applications access the specific subdirectories required for their function.
+
 
 ---
 
@@ -182,33 +189,54 @@ The container platform follows several guiding principles.
 
 ## Media Storage Mounts
 
-Media-related containers receive only the storage required for their function.
+Media acquisition and management services use a shared `/data` mount.
 
-Download clients receive:
+The shared mount provides a consistent filesystem view of downloads and media libraries across download clients and media management applications. This is required to support hardlink-based imports.
 
-```text
-/downloads
-```
+Download clients:
 
-Media managers receive:
+* qBittorrent
+* SABnzbd
 
-```text
-/downloads
-```
-
-and the appropriate media library:
+receive:
 
 ```text
-/movies
-/tv
-/music
-/music-videos
-/books
+/data
 ```
 
-Jellyfin receives read-only access to finalized media libraries.
+Media management:
 
-This provides hardlink compatibility while maintaining least privilege.
+* Sonarr
+* Radarr
+* Lidarr
+* Bazarr
+
+receive:
+
+```text
+/data
+```
+
+This allows both groups of services to access the same relative paths:
+
+```text
+/data/downloads
+/data/media
+```
+
+and ensures that downloads and media remain on the same filesystem from the containers' perspective.
+
+Jellyfin receives read-only access to the individual finalized media libraries:
+
+```text
+/data/media/movies
+/data/media/tv
+/data/media/music
+/data/media/music-videos
+/data/media/books
+```
+
+Jellyfin does not require access to `/data/downloads`.
 
 ---
 
@@ -216,56 +244,73 @@ This provides hardlink compatibility while maintaining least privilege.
 
 Containers receive only the filesystem access required for their function.
 
-### Containers Requiring Media Storage
+The shared `/data` mount represents a deliberate exception to strict least privilege for download clients and media management applications. This is necessary to provide a consistent filesystem view and enable hardlinks between downloads and media libraries.
 
-Containers receive storage based on function.
+### Containers Requiring `/data`
 
 Download clients:
 
-- qBittorrent
-- SABnzbd
+* qBittorrent
+* SABnzbd
 
 require:
 
 ```text
-- /downloads
+/data
 ```
 
 Media management:
 
-- Sonarr
-- Radarr
-- Lidarr
-- Bazarr
+* Sonarr
+* Radarr
+* Lidarr
+* Bazarr
 
 require:
 
 ```text
-- /downloads
-- relevant media library
+/data
 ```
+
+These services require access to both:
+
+```text
+/data/downloads
+/data/media
+```
+
+so that completed downloads can be imported into the appropriate media library while preserving hardlinks.
+
+### Containers Requiring Read-Only Media Access
 
 Media consumption:
 
-- Jellyfin
+* Jellyfin
 
-requires:
+requires read-only access to the finalized media libraries:
 
 ```text
-- read-only media libraries
+/data/media/movies
+/data/media/tv
+/data/media/music
+/data/media/music-videos
+/data/media/books
 ```
+
+Jellyfin does not receive access to the downloads directory.
 
 ---
 
-### Containers Without Media Storage
+## Containers Without Media Storage
 
 These containers do not require direct filesystem access:
 
-- Homepage
-- Uptime Kuma
-- Caddy
-- Gluetun
-- Jellyseerr
+* Prowlarr
+* Homepage
+* Uptime Kuma
+* Caddy
+* Gluetun
+* Jellyseerr
 
 These services communicate through APIs, web interfaces, or networking rather than directly accessing media files.
 
@@ -290,6 +335,8 @@ Container:
 ```
 
 This keeps application state isolated from shared media storage and allows configuration to be backed up independently.
+
+SABnzbd is currently an exception during the Windows/WSL2 development environment because its configuration is stored in a Docker-managed named volume due to filesystem permission limitations. This will be migrated to `appdata/sabnzbd` after migration to Ubuntu Server.
 
 ---
 

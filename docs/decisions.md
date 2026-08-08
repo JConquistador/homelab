@@ -516,3 +516,41 @@ Accepted
 ### Rationale
 
 Readarr has been retired upstream and is no longer under active development. The homelab will not adopt retired software as a core component. Book and audiobook automation is deferred until a mature, actively maintained replacement demonstrates long-term stability and community adoption.
+
+---
+
+## ADR-019
+
+### Decision
+
+Store the downloads and media directories under a shared data directory beneath the homelab root.
+
+The shared directory is exposed to media management applications through a common /data container mount.
+
+### Status
+
+Accepted
+
+### Rationale
+
+The Arr applications were previously given separate container mounts for the downloads and media directories. This caused the applications to treat the paths as separate filesystem locations, preventing hardlinks between completed downloads and the media library.
+
+As a result, imports were performed as file copies rather than hardlinks, causing unnecessarily high disk I/O and significantly increasing import times for large media files.
+
+The shared /data mount provides the download and media directories within the same filesystem view, allowing hardlinks to be created during imports.
+
+## Consequences
+
+Positive:
+
+- Hardlink-based imports are enabled.
+- Media imports are near instantaneous compared with copy-based imports.
+- Disk space usage is reduced because downloaded files and imported media can reference the same underlying data.
+- Torrent files can continue seeding without requiring a second physical copy.
+- The container path structure is consistent across development and production environments.
+
+Negative:
+
+- This introduces a limited exception to the principle of least privilege.
+- Media management applications that require hardlink-based imports must have access to the shared /data filesystem rather than only their individual media library.
+- The shared filesystem boundary must be preserved when designing the future ZFS dataset layout.

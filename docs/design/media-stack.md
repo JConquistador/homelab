@@ -66,8 +66,7 @@ Expected variables include:
 PUID
 PGID
 TZ
-MEDIA_ROOT
-CONFIG_ROOT
+HOMELAB_ROOT
 ```
 
 Sensitive values such as VPN credentials and API tokens are never stored in Git.
@@ -246,13 +245,13 @@ Media access is provided through the host media library:
 Development:
 
 ```text
-E:\homelab\media
+E:\homelab\data\media
 ```
 
 Production:
 
 ```text
-/srv/homelab/media
+/srv/homelab/data/media
 ```
 
 The frontend layer consumes finalized media files only. Download directories and application configuration directories remain isolated from frontend services.
@@ -297,49 +296,51 @@ All media containers use consistent container paths.
 
 ## Shared Media Mounts
 
-Media containers use consistent container paths while keeping downloads and media libraries separated at the host level.
+Media acquisition and management containers receive the shared /data mount so that downloads and media exist within the same filesystem namespace and can use hardlinks. 
+
+This is a deliberate exception to the principle of least privilege. These applications have access to storage outside their immediate functional directory, but this trade-off is accepted in order to support hardlink-based imports and avoid unnecessary file copying.
 
 Host:
 
 ```text
 E:\homelab
-├── downloads
-├── media
-└── appdata
+├── appdata
+└── data
+    ├── downloads
+    └── media
 ```
 
 Container paths:
 
 ```text
-/downloads
-/media
 /config
+/data
 ```
 
 Example:
 
 ```text
-/downloads
-├── qbittorrent
-│   ├── incomplete
-│   └── complete
-│
-└── sabnzbd
-    ├── incomplete
-    └── complete
+/data
+└── downloads
+    ├── qbittorrent
+    │   ├── incomplete
+    │   └── complete
+    │
+    └── sabnzbd
+        ├── incomplete
+        └── complete
 ```
 
 Media libraries:
 
 ```text
-/media
-├── movies
-├── tv
-├── music
-├── music-videos
-├── books
-├── audiobooks
-└── photos
+/data
+└── media
+    ├── movies
+    ├── tv
+    ├── music
+    ├── music-videos
+    └── books
 ```
 
 The host paths may change between development and production environments, but container paths remain consistent.
@@ -385,7 +386,7 @@ appdata/
 
 # Hardlink Strategy
 
-Sonarr and Radarr should use hardlinks when importing torrent downloads.
+Sonarr, Radarr, and Lidarr should use hardlinks when importing torrent downloads.
 
 Requirements:
 
@@ -409,10 +410,10 @@ Correct:
 
 ```text
 qBittorrent:
-/downloads/qbittorrent/complete
+/data/downloads/qbittorrent/complete
 
 Sonarr:
-/downloads/qbittorrent/complete
+/data/downloads/qbittorrent/complete
 ```
 
 The download client and media managers must see the same container path structure. This allows hardlinks to be created without remote path mappings.
@@ -564,8 +565,7 @@ The following container paths should remain unchanged:
 
 ```text
 /config
-/downloads
-/media
+/data
 ```
 
 ---

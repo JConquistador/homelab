@@ -17,8 +17,9 @@ Completed implementation:
 - Torrent trackers configured
 - Sonarr/Radarr/Lidarr/Bazarr deployed and configured
 - Validate automated acquisition workflow (\*arr → Prowlarr → SABnzbd/qbittorrent → Completed Downloads → \*arr import → \homelab\media\<subfolder>)
+- Jellyfin deployed and configured. Validated jellyfin can find/play media files managed by the automation services.
 
-The next implementation step is deploying Jellyfin/Jellyseer to bind all the services into one fully automated workflow.
+The next implementation step is deploying Jellyseer to bind all the services into one fully automated workflow.
 
 ---
 

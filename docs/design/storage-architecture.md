@@ -42,20 +42,21 @@ Only the host storage path should change during migration. The internal director
 homelab/
 ├── appdata/
 ├── backups/
-├── downloads/
-│   ├── qbittorrent/
-│   │   ├── complete/
-│   │   └── incomplete/
-│   └── sabnzbd/
-│       ├── complete/
-│       └── incomplete/
+├── data/
+│   ├── downloads/
+│   │   ├── qbittorrent/
+│   │   │   ├── complete/
+│   │   │   └── incomplete/
+│   │   └── sabnzbd/
+│   │       ├── complete/
+│   │       └── incomplete/
+│   └── media/
+│       ├── books/
+│       ├── movies/
+│       ├── music/
+│       ├── music-videos/
+│       └── tv/
 ├── logs/
-├── media/
-│   ├── books/
-│   ├── movies/
-│   ├── music/
-│   ├── music-videos/
-│   └── tv/
 ├── scripts/
 └── staging/
 ```
@@ -186,7 +187,7 @@ Hardlinks require:
 
 The storage layout and container mount strategy are designed specifically to support these requirements.
 
-Development Note: Hardlink behavior cannot be fully validated in the Windows/WSL2 development environment because Docker bind mounts traverse the Windows NTFS filesystem layer. Production validation will occur after migration to Ubuntu Server with ZFS storage.
+Development Note: Hardlinks have been successfully validated in the Windows/WSL2 development environment. Production validation will be performed again after migration to Ubuntu Server with ZFS storage.
 
 ---
 
@@ -214,11 +215,7 @@ Container paths may include:
 
 ```text
 /config
-/downloads
-/movies
-/tv
-/music
-/books
+/data
 ```
 
 Additional administrative paths such as:
@@ -248,21 +245,13 @@ Media-related containers receive:
 ```text
 Host
 
-homelab/media/movies
-homelab/media/tv
-homelab/media/music
-homelab/media/music-videos
-homelab/media/books
+homelab/data
 
 ↓
 
 Container
 
-/movies
-/tv
-/music
-/music-videos
-/books
+/data
 ```
 
 Application configuration is separated:
@@ -285,11 +274,27 @@ This keeps application state isolated while allowing controlled access to shared
 
 ## Shared Container View
 
-Media-related containers receive only the storage required for their role. Download clients receive the downloads directory, while media managers additionally receive the appropriate media library.
+Media acquisition and management applications receive the shared `/data` mount:
 
-This follows the principle of least privilege.
+- qBittorrent
+- SABnzbd
+- Sonarr
+- Radarr
+- Lidarr
+- Bazarr
 
-Because download clients and media management applications use matching container paths for shared download locations, remote path mappings are avoided.
+This provides a consistent filesystem namespace:
+
+```text
+/data/downloads
+/data/media
+```
+
+The shared mount is intentional because hardlinks require downloads and media to exist within the same filesystem namespace. It also ensures that download clients and media management applications use matching paths when communicating about completed downloads.
+
+This is a deliberate exception to the principle of least privilege. These applications have access to storage outside their immediate functional directory, but this trade-off is accepted in order to support hardlink-based imports and avoid unnecessary file copying.
+
+Jellyfin receives read-only access only to the media libraries it serves.
 
 ---
 
