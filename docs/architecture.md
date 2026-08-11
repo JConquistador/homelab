@@ -65,7 +65,7 @@ Future production platform:
         │
  Homepage • Uptime Kuma
         │
- Jellyseerr → Sonarr/Radarr/Lidarr
+ Seerr → Sonarr/Radarr/Lidarr
         │
      Prowlarr
         │
@@ -106,7 +106,7 @@ Future production platform:
 ## Media Applications
 
 * Jellyfin
-* Jellyseerr
+* Seerr
 * Sonarr
 * Radarr
 * Lidarr

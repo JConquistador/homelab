@@ -80,7 +80,7 @@ Examples:
 
 This directory is critical and should be included in backups.
 
-Development Note: SABnzbd configuration is stored in a Docker named volume due to Windows filesystem permission limitations. This will be migrated to appdata/sabnzbd after moving to Ubuntu Server.
+Development Note: SABnzbd and Seerr configuration is stored in a Docker named volume due to Windows filesystem permission limitations. This will be migrated to appdata/sabnzbd after moving to Ubuntu Server.
 
 ---
 

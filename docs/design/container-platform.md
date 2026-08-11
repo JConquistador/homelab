@@ -310,7 +310,7 @@ These containers do not require direct filesystem access:
 * Uptime Kuma
 * Caddy
 * Gluetun
-* Jellyseerr
+* Seerr
 
 These services communicate through APIs, web interfaces, or networking rather than directly accessing media files.
 
@@ -336,7 +336,7 @@ Container:
 
 This keeps application state isolated from shared media storage and allows configuration to be backed up independently.
 
-SABnzbd is currently an exception during the Windows/WSL2 development environment because its configuration is stored in a Docker-managed named volume due to filesystem permission limitations. This will be migrated to `appdata/sabnzbd` after migration to Ubuntu Server.
+SABnzbd and Seerr are currently exceptions during the Windows/WSL2 development environment because its configuration is stored in a Docker-managed named volume due to filesystem permission limitations. This will be migrated to `appdata/sabnzbd` and `appdata/seerr` respectively after migration to Ubuntu Server.
 
 ---
 

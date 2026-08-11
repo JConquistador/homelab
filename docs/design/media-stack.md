@@ -110,7 +110,7 @@ These services retrieve content.
 | Service | Purpose |
 |---|---|
 | Jellyfin | Media server |
-| Jellyseerr | Media request management |
+| Seerr | Media request management |
 | Tautulli | Jellyfin monitoring and statistics |
 
 ---
@@ -124,7 +124,7 @@ Users
  |
  +----------------+
  |                |
-Jellyfin      Jellyseerr
+Jellyfin      Seerr
                   |
         Sonarr / Radarr / Lidarr
                   |
@@ -139,7 +139,7 @@ Jellyfin      Jellyseerr
               Jellyfin
 ```
 
-Jellyseerr provides a request interface, while Jellyfin remains the primary media consumption platform.
+Seerr provides a request interface, while Jellyfin remains the primary media consumption platform.
 
 ---
 
@@ -173,88 +173,147 @@ Examples:
 
 ---
 
-## vpn Network
+## VPN Network
 
 Purpose:
 
-The VPN network provides outbound VPN connectivity for download clients. qBittorrent and SABnzbd share Gluetun's network namespace using network_mode: service:gluetun. 
-Media management services (Prowlarr, Sonarr, Radarr, etc.) remain on the media network.
+The VPN network provides outbound VPN connectivity for download clients that require VPN protection.
+
+**qBittorrent** uses Gluetun's network namespace and therefore routes its Internet traffic through the configured Mullvad VPN connection.
+
+**SABnzbd does not use the VPN network.** SABnzbd operates on the normal `homelab-media-network` and connects directly to its configured Usenet providers. Usenet traffic is protected using the provider's TLS connection rather than the Mullvad VPN tunnel.
+
+Media management services such as Prowlarr, Sonarr, Radarr, Lidarr, and Bazarr remain on the media network.
 
 Example:
 
 ```text
-                    Media Network
+                         Media Network
 
-        +-----------+-----------+
-        |           |           |
-    Prowlarr     Sonarr      Radarr
-        |
-        |
-        +----------------+
-                         |
-                  Download Clients
-                         |
-              +----------+----------+
-              |                     |
-          SABnzbd             qBittorrent
-              |                     |
-              +----------+----------+
-                         |
-                      Gluetun
-                         |
-                    Mullvad VPN
+        +-----------+-----------+-----------+-----------+
+        |           |           |           |           |
+    Prowlarr     Sonarr      Radarr      Lidarr      Bazarr
+        |           |           |           |           |
+        |           +-----------+-----------+-----------+
+        |                       |
+        |                 Download Clients
+        |                       |
+        |                 +-----+-----+
+        |                 |           |
+        |             SABnzbd    qBittorrent
+        |                 |           |
+        |                 |       Gluetun
+        |                 |           |
+        |                 |      Mullvad VPN
+        |                 |           |
+        +-----------------+-----------+
+                                  |
+                               Internet
 ```
 
-qBittorrent and SABnzbd must not have direct internet access outside the VPN tunnel.
+### qBittorrent
+
+qBittorrent shares Gluetun's network namespace:
+
+```yaml
+network_mode: "service:gluetun"
+```
+
+As a result, qBittorrent's outbound network traffic is routed through Gluetun and the Mullvad VPN.
+
+qBittorrent must not have direct Internet access outside the VPN tunnel.
+
+### SABnzbd
+
+SABnzbd is attached directly to:
+
+```text
+homelab-media-network
+```
+
+It does not use:
+
+```yaml
+network_mode: "service:gluetun"
+```
+
+and does not depend on Gluetun.
+
+SABnzbd connects directly to its configured Usenet providers using their configured TLS ports.
+
+SABnzbd is reachable by other media containers using Docker DNS:
+
+```text
+http://sabnzbd:8080
+```
+
+For host administration during development, SABnzbd's container port `8080` is published as host port `8081`:
+
+```yaml
+ports:
+  - "8081:8080"
+```
+
+Therefore:
+
+```text
+Host:
+http://localhost:8081
+
+Docker media network:
+http://sabnzbd:8080
+```
+
+SABnzbd's API key and hostname restrictions must permit requests from the media services. The configured `host_whitelist` includes the `sabnzbd` Docker hostname.
 
 ---
 
 ## VPN Gateway Port Exposure
 
-Services sharing the Gluetun network namespace cannot publish ports independently.
+Services that share Gluetun's network namespace cannot publish ports independently. Ports required by those services must be published by Gluetun.
+
+This applies to qBittorrent.
 
 Example:
 
-qBittorrent:
-  internal port 8080
-
-SABnzbd:
-  internal port 8081
-
-Both ports must be published by the Gluetun container.
-
----
-
-## Frontend Network
-
-Purpose:
-
-Communication with reverse proxies, dashboards, and user-facing services.
-
-Examples:
-
-- Jellyfin
-- Jellyseerr
-
-Jellyfin participates in the frontend network for user access.
-
-Jellyfin accesses organized media files through a read-only media mount. It does not communicate directly with automation services such as Sonarr or Radarr.
-
-Media access is provided through the host media library:
-
-Development:
-
 ```text
-E:\homelab\data\media
+Gluetun
+├── host port 8080
+│   └── qBittorrent WebUI :8080
+└── VPN network namespace
 ```
 
-Production:
+SABnzbd does **not** share Gluetun's network namespace and therefore does not use Gluetun for port exposure.
+
+SABnzbd publishes its own WebUI port directly:
 
 ```text
-/srv/homelab/data/media
+SABnzbd
+└── host port 8081 → container port 8080
 ```
 
-The frontend layer consumes finalized media files only. Download directories and application configuration directories remain isolated from frontend services.
+This separation is intentional:
+
+```text
+qBittorrent
+    │
+    └── Gluetun network namespace
+            │
+            └── Mullvad VPN
+                    │
+                    └── Internet
+
+
+SABnzbd
+    │
+    └── homelab-media-network
+            │
+            └── Direct Internet
+                    │
+                    └── Usenet provider via TLS
+```
+
+The media applications communicate with both download clients over the Docker media network using their service names and internal container ports.
 
 ---
 
@@ -378,7 +437,7 @@ appdata/
 ├── lidarr
 ├── bazarr
 ├── jellyfin
-├── jellyseerr
+├── seerr
 └── tautulli
 ```
 
@@ -522,7 +581,7 @@ Automation layer:
 Consumption layer:
 
 - Jellyfin
-- Jellyseerr
+- Seerr
 - Tautulli
 
 Each stage must be validated before continuing.

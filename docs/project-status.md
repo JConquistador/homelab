@@ -19,7 +19,7 @@ Completed implementation:
 - Validate automated acquisition workflow (\*arr → Prowlarr → SABnzbd/qbittorrent → Completed Downloads → \*arr import → \homelab\media\<subfolder>)
 - Jellyfin deployed and configured. Validated jellyfin can find/play media files managed by the automation services.
 
-The next implementation step is deploying Jellyseer to bind all the services into one fully automated workflow.
+The next implementation step is deploying Seerr to bind all the services into one fully automated workflow.
 
 ---
 
@@ -74,7 +74,7 @@ Continue deployment of the media stack.
 
 Next implementation stages:
 
-- Deploy the media consumption layer (Jellyfin, Jellyseerr, Tautulli).
+- Deploy the media consumption layer (Seerr, Tautulli).
 - Integrate Cloudflare DNS/Peverse Proxy, Caddy, and Tailscale to expose the correct public and private services.
 - Resolve cloudflare issues adding 1337x and anidex trackers to prowlarr
 
@@ -97,11 +97,11 @@ Media:
 - Radarr
 - Lidarr
 - Bazarr
+- Jellyfin
 
 Pending:
 
-- Jellyfin
-- Jellyseerr
+- Seerr
 - Tautulli
 
 ---

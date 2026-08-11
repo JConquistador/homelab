@@ -17,7 +17,6 @@ services:
     
     ports:
       - 8080:8080
-      - 8081:8081
 
     environment:
       TZ: ${TZ}
@@ -59,17 +58,12 @@ services:
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbd
     restart: unless-stopped
-
-    network_mode: "service:gluetun"
     
-    depends_on:
-      - gluetun
+    ports:
+      - "8081:8080"
     
-    #Temporary to allow configuration, remove    
-    #ports:
-    #  - "8081:8080"
-    #networks:
-    #  - media
+    networks:
+      - media
 
     environment:
       - PUID=${PUID}
