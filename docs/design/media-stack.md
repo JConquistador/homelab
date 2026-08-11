@@ -443,6 +443,50 @@ appdata/
 
 ---
 
+### Jellyfin Library Scanning — Development Environment
+
+Jellyfin real-time library monitoring is enabled for the media libraries.
+
+In the current Windows 10 + Docker Desktop + WSL 2 development environment, filesystem events generated when Sonarr or Radarr imports media are not consistently detected by Jellyfin. A manual **Scan Media Library** task successfully discovers newly imported media.
+
+As a temporary development-environment workaround, the Jellyfin **Scan Media Library** scheduled task is configured to run every **15 minutes**.
+
+This workaround is not considered a production architecture requirement.
+
+When migrating to the production environment:
+
+* Proxmox VE
+* Ubuntu Server LTS
+* Docker
+* ZFS-backed storage
+
+Jellyfin real-time monitoring should be retested before retaining the 15-minute scheduled scan. If filesystem event detection operates reliably on the production Linux/ZFS environment, the additional scheduled scan can be removed or its interval increased.
+
+The intended production workflow is:
+
+```text
+Sonarr/Radarr
+      │
+      │ Import media
+      ▼
+Media Library
+      │
+      │ Filesystem event
+      ▼
+Jellyfin
+      │
+      │ Library synchronization
+      ▼
+Seerr
+      │
+      ▼
+Media becomes Available
+```
+
+The scheduled scan is therefore a reliability fallback for the current development environment rather than a required component of the media automation architecture.
+
+---
+
 # Hardlink Strategy
 
 Sonarr, Radarr, and Lidarr should use hardlinks when importing torrent downloads.
