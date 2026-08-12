@@ -18,8 +18,9 @@ Completed implementation:
 - Sonarr/Radarr/Lidarr/Bazarr deployed and configured
 - Validate automated acquisition workflow (\*arr → Prowlarr → SABnzbd/qbittorrent → Completed Downloads → \*arr import → \homelab\media\<subfolder>)
 - Jellyfin deployed and configured. Validated jellyfin can find/play media files managed by the automation services.
+- Seerr deployed and configured. Validated Seerr can make requests to Radarr/Sonarr and media appears in the Jellyfin library.
 
-The next implementation step is deploying Seerr to bind all the services into one fully automated workflow.
+The next implementation step is deploying Tautulli.
 
 ---
 
@@ -98,10 +99,10 @@ Media:
 - Lidarr
 - Bazarr
 - Jellyfin
+- Seerr
 
 Pending:
 
-- Seerr
 - Tautulli
 
 ---
