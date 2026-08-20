@@ -126,6 +126,7 @@ Optional future additions:
 
 * Grafana
 * Prometheus
+* Chaptarr (a replacement for the deprecated Readarr currently in development)
 
 ---
 
