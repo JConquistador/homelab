@@ -111,7 +111,6 @@ These services retrieve content.
 |---|---|
 | Jellyfin | Media server |
 | Seerr | Media request management |
-| Tautulli | Jellyfin monitoring and statistics |
 
 ---
 
@@ -437,8 +436,7 @@ appdata/
 ├── lidarr
 ├── bazarr
 ├── jellyfin
-├── seerr
-└── tautulli
+└── seerr
 ```
 
 ---
@@ -626,7 +624,6 @@ Consumption layer:
 
 - Jellyfin
 - Seerr
-- Tautulli
 
 Each stage must be validated before continuing.
 

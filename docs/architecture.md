@@ -115,7 +115,6 @@ Future production platform:
 * SABnzbd
 * qBittorrent
 * Gluetun
-* Tautulli
 
 ## Infrastructure
 
@@ -124,8 +123,7 @@ Future production platform:
 
 Optional future additions:
 
-* Grafana
-* Prometheus
+* Advanced infrastructure and media monitoring (Grafana, Prometheus, Jellyfin Playback Reporting plugin, etc.)
 * Chaptarr (a replacement for the deprecated Readarr currently in development)
 
 ---

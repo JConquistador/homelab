@@ -2,25 +2,17 @@
 
 ## Current Phase
 
-**Phase 7 – Media Stack Deployment (Part 3 – Automation Services)**
+**Phase 7 – Media Stack Deployment (Part 4 - Operational Integration, UX, and Validation)**
 
-The Download services have been successfully deployed.
+The Automation services have been successfully deployed. Before adding caddy, tailscale and reverse proxies, we need to harden the media stack.
 
-Completed implementation:
-
-- Gluetun deployed
-- qBittorrent deployed
-- SABnzbd deployed
-- VPN routing validated
-- Prowlarr deployed
-- Usenet indexer configured
-- Torrent trackers configured
-- Sonarr/Radarr/Lidarr/Bazarr deployed and configured
-- Validate automated acquisition workflow (\*arr → Prowlarr → SABnzbd/qbittorrent → Completed Downloads → \*arr import → \homelab\media\<subfolder>)
-- Jellyfin deployed and configured. Validated jellyfin can find/play media files managed by the automation services.
-- Seerr deployed and configured. Validated Seerr can make requests to Radarr/Sonarr and media appears in the Jellyfin library.
-
-The next implementation step is deploying Tautulli.
+7.4A  Operational integration
+│
+├─ Homepage organization
+├─ Monitoring network design
+├─ Uptime Kuma monitors
+├─ Basic alerting
+└─ Validate operational baseline
 
 ---
 
@@ -36,6 +28,7 @@ The next implementation step is deploying Tautulli.
 | Phase 6 – Media Architecture & Design | ✅ Complete |
 | Phase 7 – Media Stack Deployment (Part 1 – VPN Foundation) | ✅ Complete |
 | Phase 7 – Media Stack Deployment (Part 2 – Download Services) | ✅ Complete |
+| Phase 7 – Media Stack Deployment (Part 3 – Automation Services) | ✅ Complete |
 
 ---
 
@@ -71,41 +64,34 @@ Current state:
 
 # Next Milestone
 
-Continue deployment of the media stack.
+Configuration of the media stack.
 
 Next implementation stages:
 
-Phase 7 - Media Stack Deployment (Part 3 – Automation Services)
-- Deploy Tautulli
-
-Phase 7 - Media Stack Deployment (Part 4 – Operational Integration, UX, and Validation)
-7.4A  Operational integration
-      ├─ Homepage
-      ├─ Uptime Kuma
-      ├─ Tautulli integration
-      └─ Monitoring/alerting baseline
-
 7.4B  Indexer reliability
-      ├─ Investigate Prowlarr Cloudflare failures
-      ├─ 1337x
-      ├─ Anidex
-      ├─ Evaluate challenge-solving options if required
-      └─ Validate from Prowlarr
+│
+└─ Investigate Prowlarr Cloudflare failures
+   ├─ 1337x
+   └─ Anidex
+├─ Challenge-solving only if justified
+└─ Validate
 
 7.4C  Jellyfin / Seerr UX integration (The goal should be one coherent user experience, not necessarily one application. Users should just be able to: Find something → Request it → Eventually watch it)
-      ├─ Evaluate SeerrFin
-      ├─ Evaluate Jellyfin Enhanced
-      ├─ Evaluate Custom Tab approach
-      ├─ Test supported Jellyfin clients
-      ├─ Test user authentication/permissions
-      └─ Select and document one approach
+│
+├─ Evaluate SeerrFin
+├─ Evaluate Jellyfin Enhanced
+├─ Evaluate Custom Tab approach
+├─ Test supported Jellyfin clients
+├─ Test user authentication/permissions
+└─ Select and document one approach
 
 7.4D  Phase validation
-      ├─ Functional testing
-      ├─ Failure/restart testing
-      ├─ Documentation
-      ├─ Commit
-      └─ Push
+│
+├─ Functional testing
+├─ Failure/restart testing
+├─ Documentation
+├─ Commit
+└─ Push
 
 ---
 
@@ -128,10 +114,6 @@ Media:
 - Bazarr
 - Jellyfin
 - Seerr
-
-Pending:
-
-- Tautulli
 
 ---
 
