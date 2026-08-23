@@ -4,6 +4,7 @@ services:
 
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
     restart: unless-stopped
     environment:
       PUID: ${PUID}
@@ -19,6 +20,7 @@ services:
 
   uptime-kuma:
     image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
     restart: unless-stopped
     ports:
       - "3001:3001"
@@ -26,9 +28,14 @@ services:
       - ${HOMELAB_ROOT}/appdata/uptime-kuma:/app/data
     networks:
       - frontend
+      - monitoring
 
 
 networks:
 
   frontend:
     external: true
+
+  monitoring:
+    external: true
+    name: monitoring

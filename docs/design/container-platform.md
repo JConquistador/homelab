@@ -128,15 +128,87 @@ Containers are connected only to the networks required for their function.
 Examples include:
 
 * frontend
-* media
+* homelab-media-network
 * proxy
 * monitoring
+* homelab-vpn-network
 
 Network access should follow the principle of least privilege.
 
-Containers should communicate through Docker networks whenever possible rather than exposing unnecessary host ports.
+Containers should communicate through Docker networks whenever possible
+rather than exposing unnecessary host ports.
 
-Future networking documentation will define these networks in detail.
+---
+
+## Docker Network Ownership
+
+Docker networks are categorized as either:
+
+1. Compose-managed networks
+2. Host-level shared networks
+
+Compose-managed networks belong to a single Compose project and are
+created and managed by that project's Compose configuration.
+
+Host-level shared networks are created independently of Compose when
+multiple Compose projects require access to the same network.
+
+Shared networks must be declared as external networks in the Compose
+projects that consume them.
+
+---
+
+## Shared Monitoring Network
+
+The `monitoring` network is a host-level shared Docker bridge network.
+
+It allows monitoring services in the infrastructure Compose project to
+communicate with selected application services in other Compose projects
+without requiring additional host port exposure.
+
+The network is intentionally shared because Uptime Kuma belongs to the
+infrastructure Compose project while the services it monitors belong to
+the media Compose project.
+
+The monitoring network is used by:
+
+* Uptime Kuma
+* Jellyfin
+* Seerr
+* Prowlarr
+* Sonarr
+* Radarr
+* Lidarr
+* Bazarr
+* SABnzbd
+
+Services remain attached to their normal application networks in addition
+to the monitoring network when required.
+
+The following services are intentionally not attached directly to the
+monitoring network:
+
+* Homepage
+* Gluetun
+
+qBittorrent is also not attached directly to the monitoring network because
+it uses Gluetun's network namespace:
+
+```yaml
+network_mode: "service:gluetun"
+```
+
+qBittorrent is therefore monitored through the Gluetun network namespace
+rather than being independently attached to the monitoring network.
+
+---
+
+### Monitoring and Alerting
+
+Uptime Kuma monitors selected media services through the shared
+host-level `monitoring` Docker network.
+
+Discord is used as the initial notification channel.
 
 ---
 

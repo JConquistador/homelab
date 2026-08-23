@@ -4,15 +4,15 @@
 
 **Phase 7 – Media Stack Deployment (Part 4 - Operational Integration, UX, and Validation)**
 
-The Automation services have been successfully deployed. Before adding caddy, tailscale and reverse proxies, we need to harden the media stack.
+The Automation services have been successfully deployed. Before adding caddy, tailscale and reverse proxies, we need to configure and improve the usability of the media stack.
 
-7.4A  Operational integration
+7.4B  Indexer reliability
 │
-├─ Homepage organization
-├─ Monitoring network design
-├─ Uptime Kuma monitors
-├─ Basic alerting
-└─ Validate operational baseline
+└─ Investigate Prowlarr Cloudflare failures
+   ├─ 1337x
+   └─ Anidex
+├─ Challenge-solving only if justified
+└─ Validate
 
 ---
 
@@ -29,6 +29,7 @@ The Automation services have been successfully deployed. Before adding caddy, ta
 | Phase 7 – Media Stack Deployment (Part 1 – VPN Foundation) | ✅ Complete |
 | Phase 7 – Media Stack Deployment (Part 2 – Download Services) | ✅ Complete |
 | Phase 7 – Media Stack Deployment (Part 3 – Automation Services) | ✅ Complete |
+| Phase 7 – Media Stack Deployment (Part 4A – Operational Integration, UX, and Validation) | ✅ Complete |
 
 ---
 
@@ -64,7 +65,17 @@ Current state:
 
 # Next Milestone
 
-Configuration of the media stack.
+Media Stack Deployment (Part 4 - Operational Integration, UX, and Validation)
+
+Done:
+
+7.4A  Operational integration
+│
+├─ Homepage organization
+├─ Monitoring network design
+├─ Uptime Kuma monitors
+├─ Discord alerting
+└─ Validate operational baseline
 
 Next implementation stages:
 

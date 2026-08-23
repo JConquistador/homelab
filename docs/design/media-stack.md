@@ -155,7 +155,7 @@ Examples:
 
 Media-specific networks should remain owned by this Compose project.
 
-## media Network
+## Media Network
 
 Purpose:
 
