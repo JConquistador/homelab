@@ -104,23 +104,9 @@ Application-specific directories make ownership and troubleshooting clearer whil
 
 ---
 
-## ADR-007
-
-### Decision
-
-Store anime within the standard `tv` and `movies` libraries.
-
-### Status
-
-Accepted
-
-### Rationale
-
-Anime is managed by Sonarr and Radarr like any other television series or movie. Keeping a single TV library and a single movie library reduces complexity and simplifies long-term maintenance.
-
 ---
 
-## ADR-008
+## ADR-007
 
 ### Decision
 
@@ -136,7 +122,7 @@ Version-controlled documentation and configuration improve reproducibility, disa
 
 ---
 
-## ADR-009
+## ADR-008
 
 ### Decision
 
@@ -161,7 +147,7 @@ Separate Compose projects would provide additional modularity but would increase
 
 ---
 
-## ADR-010
+## ADR-009
 
 ### Decision
 
@@ -187,7 +173,7 @@ The planned network separation includes:
 
 ---
 
-## ADR-012
+## ADR-010
 
 ### Decision
 
@@ -215,7 +201,7 @@ Separate users per application would provide stronger isolation but would signif
 
 ---
 
-## ADR-013
+## ADR-011
 
 ### Decision
 
@@ -238,39 +224,17 @@ Separating configuration into application-specific directories allows:
 
 ---
 
-## ADR-014
-
-### Decision
-
-Use environment files for configuration templates while keeping secrets out of Git.
+## ADR-012
 
 ### Status
 
 Accepted
 
-### Rationale
-
-Infrastructure configuration should be version controlled, but sensitive information should not be committed.
-
-The project will maintain:
-
-- `.env.example` files containing required variables.
-- Local `.env` files excluded from Git.
-- Separate secret handling where required.
-
----
-
-# ADR-015
-
-## Status
-
-Accepted
-
-## Date
+### Date
 
 2026-07-28
 
-## Context
+### Context
 
 The media stack requires a VPN gateway for privacy-sensitive download services.
 
@@ -288,7 +252,7 @@ Potential providers considered:
 - Proton VPN
 - AirVPN
 
-## Decision
+### Decision
 
 The homelab will use Mullvad VPN with WireGuard through Gluetun.
 
@@ -307,7 +271,7 @@ The qBittorrent networking architecture will be:
 
 This ensures torrent traffic cannot bypass the VPN tunnel.
 
-## Rationale
+### Rationale
 
 Mullvad was selected because:
 
@@ -318,9 +282,9 @@ Mullvad was selected because:
 - Gluetun integration is mature.
 - The configuration is simple to maintain.
 
-## Alternatives Considered
+### Alternatives Considered
 
-### Proton VPN
+#### Proton VPN
 
 Advantages:
 
@@ -333,7 +297,7 @@ Rejected for now because:
 - Port forwarding is not currently required.
 - Additional configuration complexity provides limited benefit for current requirements.
 
-### AirVPN
+#### AirVPN
 
 Advantages:
 
@@ -346,164 +310,25 @@ Rejected for now because:
 - Greater configuration complexity.
 - Advanced features are not currently required.
 
-## Consequences
+### Consequences
 
-### Positive
+#### Positive
 
 - Simple VPN architecture.
 - Strong traffic isolation.
 - Minimal ongoing maintenance.
 - Easy future provider replacement.
 
-### Negative
+#### Negative
 
 - No inbound torrent port forwarding.
 - Potentially reduced torrent seeding efficiency.
 
 Future migration to another VPN provider should only require environment and Gluetun configuration changes.
 
-## ADR-016
-
-### Status
-
-Accepted
-
-### Date
-
-2026-07-28
-
-### Context
-
-The first production media services have now been deployed using the architecture defined in the design documentation.
-
-This milestone validates:
-
-- Dedicated media Compose project.
-- Dedicated Docker networks.
-- Gluetun VPN gateway.
-- qBittorrent and SABnzbd using `network_mode: service:gluetun`.
-- Environment variable configuration through `.env`.
-- Git exclusion of deployment-specific secrets.
-
-### Decision
-
-The project will use Gluetun as the shared VPN gateway for torrent download services.
-
-Applications requiring VPN protection will join the Gluetun network namespace using:
-
-```yaml
-network_mode: service:gluetun
-```
-
-This architecture prevents protected services from communicating directly with the Docker bridge network or the host network.
-
-### Rationale
-
-Using a shared network namespace provides:
-
-- Automatic kill-switch behavior through Gluetun.
-- No additional firewall rules within application containers.
-- Simplified networking.
-- Consistent outbound routing through WireGuard.
-
-Verification confirmed that outbound traffic from qBittorrent exits through the Mullvad VPN endpoint rather than the host's public IP address.
-
-### Consequences
-
-#### Positive
-
-- Torrent traffic cannot bypass the VPN tunnel.
-- The networking model is simple and reproducible.
-- Additional VPN-protected services can be added with minimal configuration.
-
-#### Negative
-
-- Services sharing the Gluetun namespace cannot expose ports independently.
-- All exposed ports must be published by the Gluetun container.
-
-## ADR-017
-
-# VPN Routing Scope for Media Services
-
-## Status
-
-Accepted
-
-## Date
-
-2026-07-29
-
-## Context
-
-The media stack includes services that communicate with external content providers and download networks. Not all services require VPN routing, and routing every media service through the VPN would increase networking complexity and reduce operational simplicity.
-
-Potential candidates include:
-
-- qBittorrent
-- SABnzbd
-- Sonarr
-- Radarr
-- Prowlarr
-- Jellyfin
-
-## Decision
-
-Only download clients that retrieve content from external download networks will be routed through the VPN gateway.
-
-VPN-routed services:
-
-- qBittorrent
-- SABnzbd
-
-Non-VPN services:
-
-- Prowlarr
-- Sonarr
-- Radarr
-- Lidarr
-- Readarr
-- Bazarr
-- Jellyfin
-- Jellyseerr
-
-## Implementation
-
-Download clients share the Gluetun network namespace using:
-
-- `network_mode: service:gluetun`
-
-Automation services use the standard media Docker network.
-
-## Rationale
-
-The VPN provides privacy benefits primarily for download traffic.
-
-Automation services do not require VPN routing and benefit from normal network connectivity for:
-
-- service communication,
-- API integrations,
-- local management,
-- troubleshooting.
-
-Keeping automation services outside the VPN simplifies networking while maintaining privacy where it matters.
-
-## Consequences
-
-Positive:
-
-- Simpler Docker networking.
-- Easier service discovery.
-- Fewer routing issues.
-- Reduced VPN dependency.
-
-Negative:
-
-- Automation services communicate over the normal network path.
-- Future changes may require revisiting service boundaries.
-
 ---
 
-## ADR-018
+## ADR-013
 
 ### Decision
 
@@ -519,7 +344,7 @@ Readarr has been retired upstream and is no longer under active development. The
 
 ---
 
-## ADR-019
+## ADR-014
 
 ### Decision
 
@@ -539,7 +364,7 @@ As a result, imports were performed as file copies rather than hardlinks, causin
 
 The shared /data mount provides the download and media directories within the same filesystem view, allowing hardlinks to be created during imports.
 
-## Consequences
+### Consequences
 
 Positive:
 
@@ -554,3 +379,102 @@ Negative:
 - This introduces a limited exception to the principle of least privilege.
 - Media management applications that require hardlink-based imports must have access to the shared /data filesystem rather than only their individual media library.
 - The shared filesystem boundary must be preserved when designing the future ZFS dataset layout.
+
+---
+
+## ADR-015 – Supplemental Indexer Reliability and Cloudflare Protection
+
+### Status
+
+Accepted
+
+### Date
+
+2026-08-25
+
+### Context
+
+During Phase 7.4B, additional torrent indexers were evaluated for use with
+Prowlarr.
+
+The primary candidates were:
+
+* 1337x
+* Anidex
+
+Prowlarr was unable to successfully test these indexers because their
+websites employ automated traffic protection.
+
+Testing directly from the media Docker network confirmed that the
+protection is not limited to Prowlarr configuration.
+
+The existing Prowlarr deployment already has multiple functional torrent
+and Usenet indexers. The additional indexers therefore provide
+supplementary rather than essential functionality.
+
+### Decision
+
+Do not introduce challenge-solving infrastructure or other specialized
+bypass mechanisms solely to support 1337x or Anidex at this time.
+
+The existing indexer configuration will remain the primary source of
+indexer functionality.
+
+1337x and Anidex may be reconsidered in the future if:
+
+* their protection requirements change;
+* Prowlarr gains reliable native support for their protection mechanisms;
+* a stable, well-maintained integration becomes available; or
+* the additional indexer functionality becomes sufficiently valuable to 
+  justify the operational complexity.
+
+No current production dependency will be placed on either indexer.
+
+### Rationale
+
+The purpose of Phase 7.4B is to improve indexer reliability, not to add
+fragile infrastructure.
+
+Because the current Prowlarr deployment already has functional indexers,
+the operational cost and reliability risk outweigh the benefit of adding
+these supplementary sources.
+
+This decision also follows the project's general principle of keeping the
+media stack as simple and reliable as practical.
+
+### Consequences
+
+#### Positive
+
+* No additional challenge-solving infrastructure is required.
+* The media stack remains simpler.
+* Prowlarr remains dependent primarily on stable indexer integrations.
+* No additional service needs to be maintained or monitored.
+* Existing functional indexers remain unaffected.
+
+#### Negative
+
+* 1337x will not be available through the current Prowlarr deployment.
+* Anidex will not be available through the current Prowlarr deployment.
+* Some searches may have fewer supplementary results.
+
+### Alternatives Considered
+
+#### Use alternate 1337x domains
+
+The available 1337x domains were tested conceptually as alternatives to
+the primary `.to` domain.
+
+Because the protection mechanism is applied at the website/network level,
+switching domains does not provide sufficient evidence of a stable
+integration.
+
+No alternate domain will be adopted solely to bypass the protection.
+
+#### Add challenge-solving infrastructure
+
+A dedicated challenge-solving solution could potentially allow protected
+indexers to be accessed.
+
+This was rejected because the operational complexity is not justified by
+the relatively small benefit provided by these supplementary indexers.
