@@ -478,3 +478,183 @@ indexers to be accessed.
 
 This was rejected because the operational complexity is not justified by
 the relatively small benefit provided by these supplementary indexers.
+
+---
+
+## ADR-016 – Media Discovery, Request, and Playback UX
+
+### Status
+
+Accepted
+
+### Date
+
+2026-10-06
+
+### Context
+
+The media stack needs to provide a simple user experience for non-technical users across multiple device platforms, including Android TV, smartphones, tablets, and web/desktop clients.
+
+The desired user workflow is:
+
+**Find something -> Request it -> Eventually watch it**
+
+The project evaluated approaches for combining the media request and playback experience, including:
+
+- Seerr with Jellyfin as separate applications
+- SeerrFin
+- Jellyfin Enhanced
+- Jellyfin Custom Tabs / embedded Seerr
+
+A single application is not required to provide a coherent user experience. Jellyfin clients vary significantly in their support for plugins and web-based integrations, making a universal embedded request interface impractical.
+
+The project has also validated the complete user workflow on Android TV using:
+
+**SeerrTV -> request media -> Jellyfin -> watch media**
+
+This demonstrated that users can successfully use dedicated applications for requesting and consuming media without requiring the request functionality to be embedded into Jellyfin.
+
+### Decision
+
+The homelab will use **Seerr as the media discovery and request application** and **Jellyfin as the media consumption and playback application**.
+
+These applications are intentionally treated as separate user-facing components.
+
+The standard user workflow is:
+
+```text
+                    +--------------+
+                    |    Seerr     |
+                    | Find &       |
+                    | Request      |
+                    +------+-------+
+                           |
+                        Request
+                           |
+                           v
+                  +-------------------+
+                  | Sonarr / Radarr   |
+                  +---------+---------+
+                            |
+                      Download /
+                        Import
+                            |
+                            v
+                    +--------------+
+                    |   Jellyfin   |
+                    |    Watch     |
+                    +--------------+
+```
+
+Users will be provided with appropriate Seerr and Jellyfin clients for their device platform.
+
+For example, on Android TV:
+
+- **SeerrTV** is used to find and request media.
+- **Jellyfin** is used to watch available media.
+
+The same conceptual separation applies to smartphones, tablets, web clients, and other supported platforms.
+
+### Rationale
+
+This approach provides a consistent mental model without requiring every Jellyfin client to support the same integration features.
+
+Users only need to understand two concepts:
+
+- **Seerr = find and request**
+- **Jellyfin = watch**
+
+This separation provides several advantages:
+
+- Works across a wider range of client platforms.
+- Does not depend on Jellyfin plugin support in every client.
+- Does not make third-party Jellyfin UI extensions a core dependency.
+- Keeps media request functionality in the application specifically designed for it.
+- Keeps playback functionality in the application specifically designed for it.
+- Allows either application to evolve independently.
+- Reduces the risk that a Jellyfin plugin or UI integration failure affects media playback.
+- Simplifies troubleshooting and user documentation.
+
+The validated Android TV workflow demonstrates that the two-application model provides the required end-to-end user experience.
+
+### Alternatives Considered
+
+#### SeerrFin
+
+SeerrFin provides a more tightly integrated Seerr experience within Jellyfin.
+
+It was not selected as the primary architecture because the project does not require request functionality to be embedded into Jellyfin, and client compatibility and additional integration dependencies would increase the complexity of the overall solution.
+
+It may be reconsidered in the future if it provides substantial usability improvements without compromising reliability or client compatibility.
+
+#### Jellyfin Enhanced
+
+Jellyfin Enhanced provides additional Seerr integration within Jellyfin and may improve the experience on clients that support its functionality.
+
+It is not required for the project's core workflow and therefore will not be treated as a required dependency.
+
+It may be evaluated as an optional enhancement in the future.
+
+#### Jellyfin Custom Tabs
+
+Embedding Seerr into Jellyfin using Custom Tabs was considered as a way to create a single-interface experience.
+
+This was rejected as the primary architecture because it introduces additional UI integration and maintenance complexity without being necessary to achieve the required user workflow.
+
+### Consequences
+
+#### Positive
+
+- Clear separation between requesting and consuming media.
+- Broad compatibility across device platforms.
+- Simple user mental model.
+- Android TV workflow has been validated end-to-end.
+- Jellyfin playback remains independent of Seerr UI integrations.
+- No mandatory third-party Jellyfin UI plugin is required.
+- Seerr and Jellyfin can be upgraded independently.
+- Troubleshooting is simplified because request and playback responsibilities are clearly separated.
+
+#### Negative
+
+- Users must understand the distinction between Seerr and Jellyfin.
+- Users may need to switch applications when moving from requesting media to watching it.
+- Separate client applications may need to be installed and configured on each device.
+- The exact Seerr client experience may vary between platforms.
+
+### Operational Principle
+
+The project will optimize for a **coherent user workflow rather than a single application interface**.
+
+The success criterion is:
+
+> A non-technical user can find and request media using Seerr, receive or observe notification that the media is available, and then use Jellyfin to watch it on their preferred device.
+
+A future integration may improve this workflow, but it must not introduce unnecessary operational complexity or become a dependency for basic media playback.
+
+### Validation
+
+The following workflow has been successfully validated on Android TV:
+
+```text
+SeerrTV
+   |
+   v
+Find media
+   |
+   v
+Submit request
+   |
+   v
+Media acquisition and processing
+   |
+   v
+Jellyfin library
+   |
+   v
+Jellyfin Android TV
+   |
+   v
+Playback
+```
+
+This validates the selected architecture for at least one target device platform.

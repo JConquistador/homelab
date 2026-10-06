@@ -6,14 +6,13 @@
 
 The Automation services have been successfully deployed. Before adding caddy, tailscale and reverse proxies, we need to configure and improve the usability of the media stack.
 
-7.4C  Jellyfin / Seerr UX integration (The goal should be one coherent user experience, not necessarily one application. Users should just be able to: Find something → Request it → Eventually watch it)
+7.4D  Phase validation
 │
-├─ Evaluate SeerrFin
-├─ Evaluate Jellyfin Enhanced
-├─ Evaluate Custom Tab approach
-├─ Test supported Jellyfin clients
-├─ Test user authentication/permissions
-└─ Select and document one approach
+├─ Functional testing
+├─ Failure/restart testing
+├─ Documentation
+├─ Commit
+└─ Push
 
 ---
 
@@ -32,6 +31,7 @@ The Automation services have been successfully deployed. Before adding caddy, ta
 | Phase 7 – Media Stack Deployment (Part 3 – Automation Services) | ✅ Complete |
 | Phase 7 – Media Stack Deployment (Part 4A – Operational Integration) | ✅ Complete |
 | Phase 7 – Media Stack Deployment (Part 4B – Indexer reliability) | ✅ Complete |
+| Phase 7 – Media Stack Deployment (Part 4C – Media UX) | ✅ Complete |
 
 ---
 
@@ -87,9 +87,7 @@ Done:
 ├─ Challenge-solving only if justified
 └─ Validate
 
-Next implementation stages:
-
-7.4C  Jellyfin / Seerr UX integration (The goal should be one coherent user experience, not necessarily one application. Users should just be able to: Find something → Request it → Eventually watch it)
+7.4C – Media Discovery, Request, and Playback UX (The goal should be one coherent user experience, not necessarily one application. Users should just be able to: Find something → Request it → Eventually watch it)
 │
 ├─ Evaluate SeerrFin
 ├─ Evaluate Jellyfin Enhanced
@@ -97,6 +95,8 @@ Next implementation stages:
 ├─ Test supported Jellyfin clients
 ├─ Test user authentication/permissions
 └─ Select and document one approach
+
+Next implementation stages:
 
 7.4D  Phase validation
 │
