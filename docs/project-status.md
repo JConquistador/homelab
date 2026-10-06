@@ -2,17 +2,22 @@
 
 ## Current Phase
 
-**Phase 7 – Media Stack Deployment (Part 4 - Operational Integration, UX, and Validation)**
+**Phase 8 – Secure Access & Reverse Proxy Architecture**
 
-The Automation services have been successfully deployed. Before adding caddy, tailscale and reverse proxies, we need to configure and improve the usability of the media stack.
+The media stack is fully deployed and validated. Phase 7 is complete, including operational integration, indexer reliability, Jellyfin/Seerr UX validation, functional testing, restart/recovery testing, and documentation.
 
-7.4D  Phase validation
-│
-├─ Functional testing
-├─ Failure/restart testing
-├─ Documentation
-├─ Commit
-└─ Push
+Phase 8 will establish the secure access layer for the homelab, including:
+
+- Cloudflare DNS and proxy architecture
+- Caddy reverse proxy
+- Tailscale private access
+- Public vs. private service exposure
+- TLS and certificate management
+- Authentication and access control
+- Network isolation and firewall considerations
+
+The phase will begin with architecture and design validation before implementation.
+
 
 ---
 
@@ -26,12 +31,10 @@ The Automation services have been successfully deployed. Before adding caddy, ta
 | Phase 4 – Permissions Strategy | ✅ Complete |
 | Phase 5 – Core Infrastructure Containers | ✅ Complete |
 | Phase 6 – Media Architecture & Design | ✅ Complete |
-| Phase 7 – Media Stack Deployment (Part 1 – VPN Foundation) | ✅ Complete |
-| Phase 7 – Media Stack Deployment (Part 2 – Download Services) | ✅ Complete |
-| Phase 7 – Media Stack Deployment (Part 3 – Automation Services) | ✅ Complete |
-| Phase 7 – Media Stack Deployment (Part 4A – Operational Integration) | ✅ Complete |
-| Phase 7 – Media Stack Deployment (Part 4B – Indexer reliability) | ✅ Complete |
-| Phase 7 – Media Stack Deployment (Part 4C – Media UX) | ✅ Complete |
+| Phase 7.1 – Media Stack Deployment (VPN Foundation) | ✅ Complete |
+| Phase 7.2 – Media Stack Deployment (Download Services) | ✅ Complete |
+| Phase 7.3 – Media Stack Deployment (Automation Services) | ✅ Complete |
+| Phase 7.4 – Media Stack Deployment (Personalization and Validation) | ✅ Complete |
 
 ---
 
@@ -65,46 +68,69 @@ Current state:
 
 ---
 
-# Next Milestone
+# Next Milestones
 
-Media Stack Deployment (Part 4 - Operational Integration, UX, and Validation)
+## Phase 8 – Secure Access & Reverse Proxy
 
-Done:
+### 8.1 Architecture & Design
 
-7.4A  Operational integration
-│
-├─ Homepage organization
-├─ Monitoring network design
-├─ Uptime Kuma monitors
-├─ Discord alerting
-└─ Validate operational baseline
+- Review current Docker network architecture
+- Define public vs. private services
+- Define Caddy reverse proxy architecture
+- Define Cloudflare DNS/proxy requirements
+- Define Tailscale access architecture
+- Define TLS/certificate strategy
+- Define authentication and access-control requirements
+- Document required network changes
+- Record significant architectural decisions
 
-7.4B  Indexer reliability
-│
-└─ Investigate Prowlarr Cloudflare failures
-   ├─ 1337x
-   └─ Anidex
-├─ Challenge-solving only if justified
-└─ Validate
+### 8.2 Caddy Implementation
 
-7.4C – Media Discovery, Request, and Playback UX (The goal should be one coherent user experience, not necessarily one application. Users should just be able to: Find something → Request it → Eventually watch it)
-│
-├─ Evaluate SeerrFin
-├─ Evaluate Jellyfin Enhanced
-├─ Evaluate Custom Tab approach
-├─ Test supported Jellyfin clients
-├─ Test user authentication/permissions
-└─ Select and document one approach
+- Deploy Caddy
+- Configure Docker networking
+- Configure reverse proxy routes
+- Configure TLS
+- Validate internal service access
+- Validate public service access where applicable
 
-Next implementation stages:
+### 8.3 Cloudflare Integration
 
-7.4D  Phase validation
-│
-├─ Functional testing
-├─ Failure/restart testing
-├─ Documentation
-├─ Commit
-└─ Push
+- Configure DNS
+- Configure Cloudflare proxying
+- Validate DNS resolution
+- Validate TLS
+- Validate external access
+- Validate origin exposure/security
+
+### 8.4 Tailscale Integration
+
+- Deploy/configure Tailscale
+- Define private service access
+- Restrict administrative services to Tailscale
+- Validate remote administrative access
+- Validate access from supported client devices
+
+### 8.5 Access Layer Validation
+
+- Functional testing
+- Authentication testing
+- Failure/restart testing
+- Network isolation testing
+- TLS/certificate validation
+- Public/private access validation
+- Documentation
+- Commit
+- Push
+
+### Future Phases
+
+- Hardware transcoding / Intel Quick Sync
+- Backup strategy
+- ZFS snapshots
+- Disaster recovery
+- Migration scripts from the Windows/WSL development environment
+- Production Proxmox deployment
+- Production hardlink and storage validation
 
 ---
 
