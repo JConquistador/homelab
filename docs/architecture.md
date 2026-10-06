@@ -190,7 +190,6 @@ This ensures the repository remains the authoritative source for both implementa
 
 The remaining major phases of the project include:
 
-* Media stack deployment
 * VPN networking
 * Hardware transcoding
 * Reverse proxy
@@ -203,3 +202,32 @@ The remaining major phases of the project include:
 * Migration to the dedicated Proxmox server
 
 Each phase will be documented as it is completed.
+
+---
+
+## Related Documentation
+
+### Architecture and Design
+
+* `design/networking.md`
+* `design/container-platform.md`
+* `design/storage-architecture.md`
+* `design/media-stack.md`
+* `design/reverse-proxy.md`
+
+### Implementation
+
+* `implementation/hardware.md`
+* `implementation/maintenance.md`
+* `implementation/migration.md`
+
+### Operations and Recovery
+
+* `design/backup-strategy.md`
+* `design/disaster-recovery.md`
+
+### Decisions and Project Tracking
+
+* `decisions.md`
+* `project-status.md`
+

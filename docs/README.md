@@ -35,23 +35,15 @@ Whenever implementation and documentation disagree, the documentation should be 
 
 ## Design Documentation
 
-The `design/` directory contains subsystem architecture documents.
-
-Current documents:
-
-* storage-architecture.md
-
-Additional documents will be added as implementation progresses.
-
-Examples include:
-
-* networking.md
-* permissions.md
-* docker-compose.md
-* reverse-proxy.md
-* monitoring.md
-* backup-strategy.md
-* disaster-recovery.md
+* `design/networking.md` — Network architecture, trust boundaries, public/private access, Tailscale, and Docker networking.
+* `design/reverse-proxy.md` — Caddy, Cloudflare, public ingress, and service exposure.
+* `design/container-platform.md` — Docker Compose, container networking, storage mounts, and deployment standards.
+* `design/storage-architecture.md` — Storage layout, filesystem strategy, hardlinks, and future ZFS architecture.
+* `design/media-stack.md` — Media application architecture and service relationships.
+* `design/permissions.md` — Container and filesystem permission strategy.
+* `design/backup-strategy.md` — Backup architecture and retention.
+* `design/disaster-recovery.md` — Recovery procedures and disaster scenarios.
+* `design/migration.md` — Development-to-production migration strategy.
 
 ---
 
