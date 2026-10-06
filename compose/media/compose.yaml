@@ -207,6 +207,7 @@ services:
     networks:
       - media
       - monitoring
+      - proxy
 
   seerr:
     image: ghcr.io/seerr-team/seerr:latest
@@ -233,6 +234,7 @@ services:
     networks:
       - media
       - monitoring
+      - proxy
 
 volumes:
 
@@ -251,3 +253,7 @@ networks:
   monitoring:
     external: true
     name: monitoring
+
+  proxy:
+    external: true
+    name: homelab-proxy-network

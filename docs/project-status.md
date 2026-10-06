@@ -2,22 +2,17 @@
 
 ## Current Phase
 
-**Phase 8 – Secure Access & Reverse Proxy Architecture**
+### 8.3 - Cloudflare Integration
+Caddy reverse proxy implementation and internal validation are complete.
 
-The media stack is fully deployed and validated. Phase 7 is complete, including operational integration, indexer reliability, Jellyfin/Seerr UX validation, functional testing, restart/recovery testing, and documentation.
+Next:
 
-Phase 8 will establish the secure access layer for the homelab, including:
-
-- Cloudflare DNS and proxy architecture
-- Caddy reverse proxy
-- Tailscale private access
-- Public vs. private service exposure
-- TLS and certificate management
-- Authentication and access control
-- Network isolation and firewall considerations
-
-The phase will begin with architecture and design validation before implementation.
-
+- Configure Cloudflare DNS
+- Configure Cloudflare proxying
+- Validate DNS resolution
+- Validate TLS
+- Validate external access
+- Validate origin exposure and security
 
 ---
 
@@ -35,6 +30,8 @@ The phase will begin with architecture and design validation before implementati
 | Phase 7.2 – Media Stack Deployment (Download Services) | ✅ Complete |
 | Phase 7.3 – Media Stack Deployment (Automation Services) | ✅ Complete |
 | Phase 7.4 – Media Stack Deployment (Personalization and Validation) | ✅ Complete |
+| Phase 8.1 – Secure Access & Reverse Proxy (Architecture & Design) | ✅ Complete |
+| Phase 8.2 – Secure Access & Reverse Proxy (Caddy Implementation) | ✅ Complete |
 
 ---
 
@@ -70,9 +67,9 @@ Current state:
 
 # Next Milestones
 
-## Phase 8 – Secure Access & Reverse Proxy
+## Phase 8 – Secure Access & Reverse Proxy (Completed)
 
-### 8.1 Architecture & Design
+### 8.1 - Architecture & Design
 
 - Review current Docker network architecture
 - Define public vs. private services
@@ -84,7 +81,7 @@ Current state:
 - Document required network changes
 - Record significant architectural decisions
 
-### 8.2 Caddy Implementation
+### 8.2 - Caddy Implementation
 
 - Deploy Caddy
 - Configure Docker networking
@@ -93,16 +90,18 @@ Current state:
 - Validate internal service access
 - Validate public service access where applicable
 
-### 8.3 Cloudflare Integration
+## Phase 8 – Secure Access & Reverse Proxy (Next implementation stages)
 
-- Configure DNS
+### 8.3 - Cloudflare Integration
+
+- Configure Cloudflare DNS
 - Configure Cloudflare proxying
 - Validate DNS resolution
 - Validate TLS
 - Validate external access
-- Validate origin exposure/security
+- Validate origin exposure and security
 
-### 8.4 Tailscale Integration
+### 8.4 - Tailscale Integration
 
 - Deploy/configure Tailscale
 - Define private service access
@@ -110,7 +109,7 @@ Current state:
 - Validate remote administrative access
 - Validate access from supported client devices
 
-### 8.5 Access Layer Validation
+### 8.5 - Access Layer Validation
 
 - Functional testing
 - Authentication testing
