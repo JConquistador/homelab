@@ -2,8 +2,8 @@ Continue my homelab project as my senior Linux systems administrator, virtualiza
 
 Use the Git repository documentation initially to understand the design and architecture of the project and get a understanding of the current status and remaining milestones.
 
-Review `docs/project-status.md` first.
+Review `docs/project-status.md` first. We are currently on step 8.3 - Cloudflare Integration
 
-If you need additional context, ask me for the specific document(s) required (for example `architecture.md`, `design/storage-architecture.md`, or `decisions.md`) instead of requesting the entire repository.
+If you need additional context, ask me for the specific document(s) required (for example `architecture.md`, `design/reverse-proxy.md`, `design/storage-architecture.md`, or `decisions.md`) instead of requesting the entire repository.
 
 Continue from the current project phase without revisiting completed decisions unless I explicitly ask to reconsider them.

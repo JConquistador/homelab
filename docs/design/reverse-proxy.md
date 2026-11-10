@@ -34,7 +34,7 @@ The reverse proxy should expose these services using dedicated DNS names.
 Conceptually:
 
 ```text
-seerr.example.com
+request.example.com
        |
        v
      Caddy
@@ -44,7 +44,7 @@ seerr.example.com
 ```
 
 ```text
-jellyfin.example.com
+watch.example.com
        |
        v
      Caddy
@@ -53,7 +53,14 @@ jellyfin.example.com
    Jellyfin
 ```
 
-The actual domain names will be documented when the production DNS configuration is implemented.
+The planned public hostnames are:
+
+| Hostname | Application | Purpose |
+|---|---|---|
+| `request.auroradorhq.com` | Seerr | Request movies and TV shows |
+| `watch.auroradorhq.com` | Jellyfin | Browse and stream media |
+
+These hostnames are intentionally based on user-facing functionality rather than application names. This allows the underlying applications to be replaced without changing the URLs users access.
 
 ---
 
@@ -195,10 +202,11 @@ The implementation phase will include:
 
 - Caddy deployment
 - Docker network integration
-- Cloudflare DNS configuration
+- Cloudflare DNS configuration for `request.auroradorhq.com`
+- Cloudflare DNS configuration for `watch.auroradorhq.com`
 - TLS configuration
-- Seerr proxy configuration
-- Jellyfin proxy configuration
+- Caddy routing for Seerr (`request`)
+- Caddy routing for Jellyfin (`watch`)
 - Public access testing
 - Administrative access isolation
 - Failure and restart testing

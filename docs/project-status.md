@@ -7,10 +7,13 @@ Caddy reverse proxy implementation and internal validation are complete.
 
 Next:
 
+- Domain Acquisition 
+  - Done: auroradorhq.com through Cloudflare
+    Nameservers: hazel.ns.cloudflare.com, marek.ns.cloudflare.com
+	Planned public hostnames: request and watch
 - Configure Cloudflare DNS
 - Configure Cloudflare proxying
-- Validate DNS resolution
-- Validate TLS
+- Validate DNS/TLS
 - Validate external access
 - Validate origin exposure and security
 
@@ -94,10 +97,10 @@ Current state:
 
 ### 8.3 - Cloudflare Integration
 
+- Domain Acquisition
 - Configure Cloudflare DNS
 - Configure Cloudflare proxying
-- Validate DNS resolution
-- Validate TLS
+- Validate DNS/TLS
 - Validate external access
 - Validate origin exposure and security
 
