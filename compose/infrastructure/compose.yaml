@@ -29,7 +29,23 @@ services:
     networks:
       - frontend
       - monitoring
-
+  
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:1
+    container_name: cloudflare-ddns
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+      IP4_DOMAINS: request.auroradorhq.com,watch.auroradorhq.com
+      IP6_PROVIDER: none
+      PROXIED: 'is(request.auroradorhq.com)'
+      TZ: ${TZ}
 
 networks:
 

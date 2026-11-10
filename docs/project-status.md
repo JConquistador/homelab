@@ -2,8 +2,19 @@
 
 ## Current Phase
 
-### 8.3 - Cloudflare Integration
-Caddy reverse proxy implementation and internal validation are complete.
+### 8.4 - Tailscale Integration
+
+- Acquired `auroradorhq.com` through Cloudflare Registrar.
+- Created DNS records:
+  - `request.auroradorhq.com` → Seerr (Cloudflare proxied)
+  - `watch.auroradorhq.com` → Jellyfin (DNS only)
+- Configured Cloudflare API tokens with zone-scoped permissions:
+  - Dynamic DNS updater
+  - Caddy DNS-01 certificate validation
+- Deployed `favonia/cloudflare-ddns` for automatic public IPv4 updates.
+- Built a custom Caddy image with the Cloudflare DNS provider module.
+- Configured Caddy to obtain Let's Encrypt certificates using DNS-01.
+- Validated HTTPS access to both applications from the local network and external mobile data.
 
 Next:
 
@@ -16,6 +27,12 @@ Next:
 - Validate DNS/TLS
 - Validate external access
 - Validate origin exposure and security
+
+- Deploy/configure Tailscale
+- Define private service access
+- Restrict administrative services to Tailscale
+- Validate remote administrative access
+- Validate access from supported client devices
 
 ---
 
@@ -35,6 +52,7 @@ Next:
 | Phase 7.4 – Media Stack Deployment (Personalization and Validation) | ✅ Complete |
 | Phase 8.1 – Secure Access & Reverse Proxy (Architecture & Design) | ✅ Complete |
 | Phase 8.2 – Secure Access & Reverse Proxy (Caddy Implementation) | ✅ Complete |
+| Phase 8.3 – Secure Access & Reverse Proxy (Cloudflare Integration) | ✅ Complete |
 
 ---
 
@@ -93,8 +111,6 @@ Current state:
 - Validate internal service access
 - Validate public service access where applicable
 
-## Phase 8 – Secure Access & Reverse Proxy (Next implementation stages)
-
 ### 8.3 - Cloudflare Integration
 
 - Domain Acquisition
@@ -103,6 +119,8 @@ Current state:
 - Validate DNS/TLS
 - Validate external access
 - Validate origin exposure and security
+
+## Phase 8 – Secure Access & Reverse Proxy (Next implementation stages)
 
 ### 8.4 - Tailscale Integration
 

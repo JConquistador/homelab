@@ -658,3 +658,123 @@ Playback
 ```
 
 This validates the selected architecture for at least one target device platform.
+
+---
+
+### ADR-017: Use Cloudflare DNS-01 for Public TLS Certificate Issuance
+
+**Status:** Accepted
+
+**Context**
+
+The homelab requires publicly trusted TLS certificates for services exposed through the Caddy reverse proxy.
+
+The initial HTTP-01 validation approach was unsuccessful because inbound HTTP connectivity on TCP port 80 could not be reliably established from the public internet. Testing indicated that the ISP or network path was filtering that port.
+
+The domain is registered with Cloudflare, which provides an API for managing DNS records.
+
+**Decision**
+
+Use the ACME DNS-01 challenge through the Caddy Cloudflare DNS provider module to obtain and renew Let's Encrypt certificates.
+
+- Build a custom Caddy image containing `caddy-dns/cloudflare`.
+- Authenticate DNS operations using a dedicated Cloudflare API token.
+- Scope the token to the `auroradorhq.com` zone with the permissions required for DNS-01 validation.
+- Supply the token through an environment variable; never commit credentials to Git.
+- Use persistent Caddy data storage for certificate and ACME account state.
+
+**Consequences**
+
+- Certificate issuance and renewal do not depend on inbound TCP port 80.
+- DNS validation works independently of whether individual hostnames are Cloudflare-proxied.
+- Caddy requires a custom image rather than the stock image.
+- The Cloudflare API token becomes a required runtime secret.
+- The custom image must be rebuilt when updating the Caddy version or DNS provider module.
+
+**Implementation**
+
+- Caddy custom Dockerfile and Cloudflare DNS module.
+- DNS-01 configuration for `request.auroradorhq.com` and `watch.auroradorhq.com`.
+- Successful production Let's Encrypt certificate issuance for both hostnames.
+- External HTTPS connectivity validated from the LAN and mobile data.
+
+---
+
+### ADR-018: Use Selective Cloudflare Proxying for Public Services
+
+**Status:** Accepted
+
+**Context**
+
+The homelab exposes multiple services through public DNS hostnames and the Caddy reverse proxy.
+
+Cloudflare provides proxying for supported HTTP and HTTPS traffic. However, services such as Jellyfin deliver media streams that may not be suitable for routing through Cloudflare's standard proxy service.
+
+The homelab also benefits from Cloudflare proxying for web applications such as Seerr, where it provides an additional layer between public clients and the origin server.
+
+**Decision**
+
+Use Cloudflare proxying selectively based on the traffic characteristics of each service.
+
+- Configure `request.auroradorhq.com` for Seerr as a proxied DNS record.
+- Configure `watch.auroradorhq.com` for Jellyfin as a DNS-only record.
+- Continue using Caddy as the reverse proxy and TLS termination point for both services.
+- Use Cloudflare DNS-01 validation for certificate issuance independently of each record's proxy status.
+
+**Consequences**
+
+- Seerr benefits from Cloudflare's HTTP proxying.
+- Jellyfin clients connect directly to the homelab's public IP address for media streaming.
+- The origin IP address remains discoverable through DNS-only records, including the Jellyfin hostname.
+- Both services continue to use Caddy for HTTPS and reverse proxying.
+- Additional public services must be evaluated individually before enabling Cloudflare proxying.
+
+**Implementation**
+
+- `request.auroradorhq.com`: A record, proxied.
+- `watch.auroradorhq.com`: A record, DNS only.
+- Both hostnames routed through Caddy.
+- HTTPS access validated from the LAN and external mobile data.
+
+---
+
+### ADR-019: Use Cloudflare DDNS for Automatic Public IP Updates
+
+**Status:** Accepted
+
+**Context**
+
+The homelab uses a residential internet connection with a public IPv4 address that may change.
+
+Public DNS records must remain synchronized with the current public IP address to ensure that externally accessible services continue resolving to the homelab.
+
+Manually updating DNS records whenever the public IP changes would introduce unnecessary operational overhead and could result in service interruptions.
+
+**Decision**
+
+Deploy `favonia/cloudflare-ddns` as a container in the infrastructure Compose stack to automatically update the homelab's Cloudflare DNS records.
+
+- Use the `favonia/cloudflare-ddns:1` image.
+- Configure the updater to monitor the public IPv4 address.
+- Update the A records for `request.auroradorhq.com` and `watch.auroradorhq.com`.
+- Use a dedicated Cloudflare API token with Zone Read and DNS Edit permissions restricted to the `auroradorhq.com` zone.
+- Store the API token in the infrastructure stack's `.env` file.
+- Keep runtime credentials out of version control.
+- Disable IPv6 updates until IPv6 connectivity and DNS requirements are established.
+
+**Consequences**
+
+- Public DNS records are updated automatically when the public IPv4 address changes.
+- Manual DNS updates are no longer required for routine public IP changes.
+- The DDNS container requires outbound internet access and a valid Cloudflare API token.
+- The API token becomes a required runtime secret.
+- DDNS operation is independent of Caddy and does not require publishing additional inbound ports.
+- Both proxied and DNS-only records can be maintained by the updater.
+
+**Implementation**
+
+- Deployed `favonia/cloudflare-ddns:1` in the infrastructure Compose stack.
+- Configured `request.auroradorhq.com` and `watch.auroradorhq.com` as update targets.
+- Configured proxy status to enable Cloudflare proxying for Seerr while keeping Jellyfin DNS-only.
+- Verified successful public IPv4 detection and DNS update checks.
+- Confirmed the service operates without exposing additional host ports.

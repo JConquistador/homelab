@@ -3,13 +3,19 @@ name: homelab-proxy
 services:
 
   caddy:
-    image: caddy:latest
+    image: homelab-caddy:2.11.9
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: caddy
     restart: unless-stopped
 
     ports:
       - "80:80"
       - "443:443"
+
+    environment:
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
 
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro

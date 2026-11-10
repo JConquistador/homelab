@@ -204,9 +204,6 @@ services:
       - ${HOMELAB_ROOT}/data/media/music:/music:ro
       - ${HOMELAB_ROOT}/data/media/books:/books:ro
 
-    ports:
-      - "8096:8096"
-
     networks:
       - media
       - monitoring
@@ -220,9 +217,6 @@ services:
 
     environment:
       - TZ=${TZ}
-
-    ports:
-      - "5055:5055"
 
     volumes:
       - seerr-config:/app/config
