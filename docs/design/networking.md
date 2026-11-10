@@ -103,6 +103,21 @@ Users should interact with the services through DNS names rather than host ports
 
 The public URLs are intentionally the only infrastructure details that normal users need to know.
 
+The planned public hostnames are:
+
+| Hostname | Application | Purpose |
+|---|---|---|
+| `request.auroradorhq.com` | Seerr | Request movies and TV shows |
+| `watch.auroradorhq.com` | Jellyfin | Browse and stream media |
+
+Hostnames are based on user-facing functionality rather than application names so that the URLs can remain stable if the underlying applications are replaced.
+
+Cloudflare manages public DNS and provides the external proxy layer where supported.
+
+Caddy receives incoming origin traffic and routes requests to the appropriate internal application based on the requested hostname.
+
+Jellyfin's public DNS record will use DNS-only mode rather than Cloudflare's standard HTTP proxy because of its media-streaming requirements.
+
 ---
 
 # Administrative Services
@@ -150,6 +165,14 @@ Current networks include:
 - `homelab-vpn-network`
 
 The networks serve different purposes and should not be treated as interchangeable.
+
+## Reverse Proxy Connectivity
+
+Caddy must have Docker network connectivity to Seerr and Jellyfin.
+
+The production network configuration must provide this connectivity without unnecessarily connecting Caddy to administrative or VPN-routed services.
+
+Only the networks required for reverse-proxy communication should be shared.
 
 ---
 
