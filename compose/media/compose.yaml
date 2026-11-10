@@ -16,7 +16,7 @@ services:
       - /dev/net/tun:/dev/net/tun
     
     ports:
-      - 8080:8080
+      - 8082:8082
 
     environment:
       TZ: ${TZ}
@@ -43,12 +43,15 @@ services:
 
     depends_on:
       - gluetun
+    
+    #ports:
+    #  - "8082:8082"
 
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TZ}
-      WEBUI_PORT: 8080
+      WEBUI_PORT: 8082
 
     volumes:
       - ${HOMELAB_ROOT}/appdata/qbittorrent:/config
