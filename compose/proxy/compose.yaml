@@ -24,12 +24,32 @@ services:
 
     networks:
       - proxy
+      
+    
+  caddy-private:
+    image: homelab-caddy:2.11.9
+    container_name: caddy-private
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8088:8080"
+
+    volumes:
+      - ./caddy/Caddyfile.private:/etc/caddy/Caddyfile:ro
+      - caddy-private-data:/data
+      - caddy-private-config:/config
+
+    networks:
+      - frontend
+      - media
 
 
 volumes:
 
   caddy-data:
   caddy-config:
+  caddy-private-data:
+  caddy-private-config:
 
 
 networks:
@@ -37,3 +57,11 @@ networks:
   proxy:
     external: true
     name: homelab-proxy-network
+  
+  frontend:
+    external: true
+    name: frontend
+
+  media:
+    external: true
+    name: homelab-media-network

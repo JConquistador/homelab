@@ -4,25 +4,23 @@
 
 ### 8.4 - Tailscale Integration
 
-- Acquired `auroradorhq.com` through Cloudflare Registrar.
-- Created DNS records:
-  - `request.auroradorhq.com` → Seerr (Cloudflare proxied)
-  - `watch.auroradorhq.com` → Jellyfin (DNS only)
-- Configured Cloudflare API tokens with zone-scoped permissions:
-  - Dynamic DNS updater
-  - Caddy DNS-01 certificate validation
-- Deployed `favonia/cloudflare-ddns` for automatic public IPv4 updates.
-- Built a custom Caddy image with the Cloudflare DNS provider module.
-- Configured Caddy to obtain Let's Encrypt certificates using DNS-01.
-- Validated HTTPS access to both applications from the local network and external mobile data.
+**Complete:**
+- Deployed a dedicated private Caddy service with separate configuration and persistent volumes, connected to the required administrative Docker networks.
+- Installed and enabled Tailscale on WSL Ubuntu.
+- Authenticated the WSL host as `homelab-wsl` and verified connectivity with the mobile device over the tailnet.
+- Enabled Tailscale HTTPS certificates and configured Tailscale Serve to forward tailnet HTTPS traffic to private Caddy.
+- Established `homelab-wsl.tail4a5327.ts.net` as the private MagicDNS hostname.
+- Validated remote access to private Caddy and Homepage from a mobile device over cellular data.
+- Established Homepage as the root application of the private hostname.
 
-Next:
-
-- Deploy/configure Tailscale
-- Define private service access
-- Restrict administrative services to Tailscale
-- Validate remote administrative access
-- Validate access from supported client devices
+**Next:**
+- Complete private Caddy routing for the remaining administrative applications, using path-based routing wherever reliably supported and separate MagicDNS hostnames only when necessary.
+- Validate each administrative application remotely through Tailscale.
+- Configure and verify Tailscale on the local Windows computer.
+- Confirm Homepage and all administrative services work locally and remotely through MagicDNS.
+- Remove direct host-port publications for administrative services after Tailscale access is fully validated.
+- Perform final access-control and security validation.
+- Prepare migration documentation and scripts for the future Proxmox-hosted Ubuntu Server VM deployment.
 
 ---
 

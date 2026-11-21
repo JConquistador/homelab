@@ -53,7 +53,7 @@ watch.example.com
    Jellyfin
 ```
 
-The planned public hostnames are:
+The public hostnames are:
 
 | Hostname | Application | Purpose |
 |---|---|---|
@@ -191,25 +191,6 @@ Private
   +---- SABnzbd
   +---- qBittorrent
 ```
-
----
-
-# Future Implementation
-
-Reverse proxy implementation will be performed after the networking architecture has been documented and validated.
-
-The implementation phase will include:
-
-- Caddy deployment
-- Docker network integration
-- Cloudflare DNS configuration for `request.auroradorhq.com`
-- Cloudflare DNS configuration for `watch.auroradorhq.com`
-- TLS configuration
-- Caddy routing for Seerr (`request`)
-- Caddy routing for Jellyfin (`watch`)
-- Public access testing
-- Administrative access isolation
-- Failure and restart testing
 
 ---
 

@@ -9,7 +9,8 @@ services:
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
-      TZ: ${TZ}      
+      TZ: ${TZ}
+      HOMEPAGE_ALLOWED_HOSTS: homelab-wsl.tail4a5327.ts.net,localhost:3000,127.0.0.1:3000
     ports:
       - "3000:3000"
     volumes:

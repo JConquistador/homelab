@@ -103,7 +103,7 @@ Users should interact with the services through DNS names rather than host ports
 
 The public URLs are intentionally the only infrastructure details that normal users need to know.
 
-The planned public hostnames are:
+The public hostnames are:
 
 | Hostname | Application | Purpose |
 |---|---|---|
@@ -112,9 +112,11 @@ The planned public hostnames are:
 
 Hostnames are based on user-facing functionality rather than application names so that the URLs can remain stable if the underlying applications are replaced.
 
-Cloudflare manages public DNS and provides the external proxy layer where supported.
+Cloudflare manages public DNS and provides the external proxy layer where supported. Configured Cloudflare API tokens with zone-scoped permissions: "Dynamic DNS updater", "Caddy DNS-01 certificate validation"
 
-Caddy receives incoming origin traffic and routes requests to the appropriate internal application based on the requested hostname.
+Using `favonia/cloudflare-ddns` for automatic public IPv4 updates.
+
+Caddy receives incoming origin traffic and routes requests to the appropriate internal application based on the requested hostname. Using a custom Caddy image with the Cloudflare DNS provider module and configured Caddy to obtain Let's Encrypt certificates using DNS-01.
 
 Jellyfin's public DNS record will use DNS-only mode rather than Cloudflare's standard HTTP proxy because of its media-streaming requirements.
 
