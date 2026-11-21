@@ -18,16 +18,6 @@
 
 Next:
 
-- Domain Acquisition 
-  - Done: auroradorhq.com through Cloudflare
-    Nameservers: hazel.ns.cloudflare.com, marek.ns.cloudflare.com
-	Planned public hostnames: request and watch
-- Configure Cloudflare DNS
-- Configure Cloudflare proxying
-- Validate DNS/TLS
-- Validate external access
-- Validate origin exposure and security
-
 - Deploy/configure Tailscale
 - Define private service access
 - Restrict administrative services to Tailscale
