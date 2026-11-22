@@ -1,15 +1,15 @@
 request.auroradorhq.com {
-    tls {
-        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-    }
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
 
-    reverse_proxy seerr:5055
+	reverse_proxy seerr:5055
 }
 
 watch.auroradorhq.com {
-    tls {
-        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-    }
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
 
-    reverse_proxy jellyfin:8096
+	reverse_proxy jellyfin:8096
 }

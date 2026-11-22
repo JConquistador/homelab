@@ -12,15 +12,20 @@
 - Established `homelab-wsl.tail4a5327.ts.net` as the private MagicDNS hostname.
 - Validated remote access to private Caddy and Homepage from a mobile device over cellular data.
 - Established Homepage as the root application of the private hostname.
+- Configured private Caddy path-based routing and validated remote access to Prowlarr, Sonarr, Radarr, Lidarr, Bazarr, and SABnzbd.
+- Configured qBittorrent access through private Caddy at `/qbittorrent/`, including reverse-proxy support and trusted proxy configuration.
+- Added a permanent redirect from `/qbittorrent` to `/qbittorrent/` to ensure relative WebUI resources and authentication requests resolve correctly.
+- Configured Uptime Kuma access through a separate Tailscale Serve HTTPS endpoint on port `8443`.
 
 **Next:**
-- Complete private Caddy routing for the remaining administrative applications, using path-based routing wherever reliably supported and separate MagicDNS hostnames only when necessary.
+- Review the remaining administrative services and determine their private access requirements.
 - Validate each administrative application remotely through Tailscale.
-- Configure and verify Tailscale on the local Windows computer.
+- Configure and verify Tailscale on the local Windows computer, accounting for the existing WSL Tailscale installation.
 - Confirm Homepage and all administrative services work locally and remotely through MagicDNS.
-- Remove direct host-port publications for administrative services after Tailscale access is fully validated.
+- Remove direct host-port publications for administrative services together after Tailscale access is fully validated.
 - Perform final access-control and security validation.
 - Prepare migration documentation and scripts for the future Proxmox-hosted Ubuntu Server VM deployment.
+
 
 ---
 
