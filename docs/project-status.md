@@ -15,11 +15,17 @@
 - Configured private Caddy path-based routing and validated remote access to Prowlarr, Sonarr, Radarr, Lidarr, Bazarr, and SABnzbd.
 - Configured qBittorrent access through private Caddy at `/qbittorrent/`, including reverse-proxy support and trusted proxy configuration.
 - Added a permanent redirect from `/qbittorrent` to `/qbittorrent/` to ensure relative WebUI resources and authentication requests resolve correctly.
+- Validated qBittorrent authentication, session handling, and remote WebUI access through Tailscale.
 - Configured Uptime Kuma access through a separate Tailscale Serve HTTPS endpoint on port `8443`.
+- Updated application URL Base settings and verified successful integration tests for Prowlarr connections to Sonarr, Radarr, and Lidarr.
+- Updated Bazarr integrations with Sonarr and Radarr URL Bases.
+- Updated Sonarr, Radarr, and Lidarr download-client configurations with the SABnzbd URL Base.
+- Updated Seerr integrations with Sonarr and Radarr URL Bases.
+- Validated the end-to-end media request and library workflow from Seerr through the *arr applications and into Jellyfin.
+- Confirmed that Homepage configuration review is deferred until local Windows Tailscale access is established and direct administrative host-port publications are removed.
 
 **Next:**
-- Review the remaining administrative services and determine their private access requirements.
-- Validate each administrative application remotely through Tailscale.
+- Review any remaining administrative services and determine whether additional private Caddy routes or application configuration changes are required.
 - Configure and verify Tailscale on the local Windows computer, accounting for the existing WSL Tailscale installation.
 - Confirm Homepage and all administrative services work locally and remotely through MagicDNS.
 - Remove direct host-port publications for administrative services together after Tailscale access is fully validated.
